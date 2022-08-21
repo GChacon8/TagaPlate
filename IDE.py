@@ -6,30 +6,8 @@ from turtle import bgcolor
 from typing import Text
 from tkinter import *
 from tkinter import filedialog
-
+from tkinter.tix import *
 # root window
-root = Tk()
-root.geometry('1400x800')
-root.title('TagaPlate IDE')
-
-lblCode = Label(root, text="Code")
-lblCode.place(x=500,y=5)
-
-textCode = Text(root,height=35, width=130)
-textCode.place(x=5,y=40)
-
-lblErrors = Label(root, text="Errors")
-lblErrors.place(x=1220,y=5)
-
-textErrors = Text(root,height=35, width=40)
-textErrors.place(x=1065,y=40)
-
-lblTerminal = Label(root, text="Terminal")
-lblTerminal.place(x=5, y=607)
-
-textTerminal = Text(root,height=10, width=173)
-textTerminal.place(x=5,y=630)
-
 def saveFile():
     file = open ('TagaPlateCode.txt','w')
     code = textCode.get("1.0","end-1c")
@@ -54,6 +32,52 @@ def openFile():
     #print(code)
     textCode.insert(END, code)
     file.close()
+
+
+root = Tk()
+root.geometry('1400x800')
+root.title('TagaPlate IDE')
+
+iconButtonSave = PhotoImage(file='Save_1.png')
+iconButtonOpen=PhotoImage(file="open.png")
+iconButtonRun=PhotoImage(file="run.png")
+
+scroll=scroll=Scrollbar(root, orient='vertical')
+scroll.pack(side=RIGHT, fill='y')
+
+lblCode = Label(root, text="Code")
+lblCode.place(x=500,y=5)
+
+textCode = Text(root,height=35, width=130)
+scroll.config(command=textCode.yview)
+textCode.place(x=5,y=40)
+
+lblErrors = Label(root, text="Errors")
+lblErrors.place(x=1220,y=5)
+
+textErrors = Text(root,height=35, width=40)
+textErrors.place(x=1065,y=40)
+
+lblTerminal = Label(root, text="Terminal")
+lblTerminal.place(x=5, y=607)
+
+saveButton=Button(root, text="save", image=iconButtonSave, width="30", height="30", command=saveFile)
+saveButton.place(x=0,y=0)
+openFileButton=Button(root,text="open", image=iconButtonOpen,width="30",height="30", command=openFile)
+openFileButton.place(x=35,y=0)
+runButton=Button(root,text="run",image=iconButtonRun, width="30",height="30" )
+runButton.place(x=70,y=0)
+
+
+textTerminal = Text(root,height=10, width=173)
+textTerminal.place(x=5,y=630)
+
+tip = Balloon(root)
+#Bind the tooltip with button
+tip.bind_widget(openFileButton, balloonmsg="open")
+tip.bind_widget(saveButton, balloonmsg="save")
+tip.bind_widget(runButton,balloonmsg="run")
+
 
 # create a menubar
 menubar = Menu(root)
