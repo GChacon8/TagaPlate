@@ -2,6 +2,8 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter.tix import *
 # root window
+from Lex.LexicalAnalyzer import LexicalAnalyzer
+
 """
 def saveFile():
     file = open ('TagaPlateCode.tgp', 'w')
@@ -39,6 +41,7 @@ class Errors:
     def __createErrorsBox(self):
         textErrors = Text(self.__root, height=35, width=40, background="#3d3f42", foreground="#ffffff")
         textErrors.place(x=1065, y=40)
+        textErrors.config(state=DISABLED)
 class Terminal:
     def __init__(self,root):
         self.__root = root
@@ -118,6 +121,30 @@ class myMenu:
         self.__file_menu = Menu(self.__menubar,tearoff=0)
         self.__createMenu(iconButtonSave,iconButtonOpen,iconButtonRun)
         self.__lastOpenedFile="Untitled.tgp"
+        self.__errorMessage=""
+    def compileProgram(self):
+        myLexer = LexicalAnalyzer(self.__lastOpenedFile)
+        tokenTable = myLexer.returnSymbolTable()  # LexToken(token,lexema,lineaDeCodigo,posicionEnLex)
+        self.__errorMessage = myLexer.returnErrorMesage()
+        print("Se imprime la tabla: ")
+        print(tokenTable)
+        myChild = self.__root.winfo_children()
+        myChild[9].config(state=NORMAL)
+        myChild[9].insert(INSERT,self.__errorMessage)
+        myChild[7].insert(INSERT, tokenTable)
+    def returnErrorMessage(self):
+        return self.__errorMessage
+    def runProgram(self):
+        myChild = self.__root.winfo_children()
+        numero=0
+        print(myChild)
+        for i in myChild:
+            if isinstance(i,Text):
+                i.config(state=NORMAL)
+                i.insert(INSERT,"AQUIII"+str(numero))
+                print(numero)
+            numero+=1
+
     def saveFileAs(self):
         file = filedialog.asksaveasfilename(initialdir="/",
                                               title="Choose the Name File",
@@ -132,6 +159,7 @@ class myMenu:
         file.write(code)
         file.close()
         self.__lastOpenedFile = str(file.name)
+        self.__root.title('TagaPlate IDE - '+self.__lastOpenedFile)
 
     def saveFile(self):
         print(self.__lastOpenedFile)
@@ -142,6 +170,7 @@ class myMenu:
         file.write(code)
         file.close()
         self.__lastOpenedFile = str(file.name)
+        self.__root.title('TagaPlate IDE - ' + self.__lastOpenedFile)
 
     def browseFiles(self):
         filename = filedialog.askopenfilename(initialdir="/",
@@ -160,6 +189,7 @@ class myMenu:
         self.__textCode.insert(END, code)
         file.close()
         self.__lastOpenedFile = str(file.name)
+        self.__root.title('TagaPlate IDE - ' + self.__lastOpenedFile.split('/')[-1])
     def __createMenu(self,iconButtonSave,iconButtonOpen,iconButtonRun):
         self.__createFileMenu()
         self.__createHelpMenu()
@@ -167,6 +197,7 @@ class myMenu:
     def __createFileMenu(self):
         # add menu items to the File menu
         self.__file_menu.add_command(label='Open', command=self.openFile)
+        self.__file_menu.configure(background="#5e5d5b", foreground="#ffffff")
         self.__file_menu.add_command(label='Save', command=self.saveFile)
         self.__file_menu.add_command(label='Save As', command=self.saveFileAs)
         # add Exit menu item
@@ -177,8 +208,9 @@ class myMenu:
         # create the Help menu
         self.help_menu = Menu(self.__menubar,tearoff=0)
     def __createHelpMenu(self):
-        self.help_menu.add_command(label='Compile')
-        self.help_menu.add_command(label='Run')
+        self.help_menu.configure(background="#5e5d5b", foreground="#ffffff")
+        self.help_menu.add_command(label='Compile',command=self.compileProgram)
+        self.help_menu.add_command(label='Run',command=self.runProgram)
 
         # add the Help menu to the menubar
         self.__menubar.add_cascade(label="Program",menu=self.help_menu,underline=0)
@@ -202,12 +234,12 @@ class WindowIDE:
         self.__root.title('TagaPlate IDE')
         self.__root.configure(background="#5e5d5b")
         self.__menubar = Menu(self.__root)
+        self.__menubar.configure(background="#5e5d5b", foreground="#ffffff")
         self.__iconButtonSave = PhotoImage(file='IDE/Save_1.png')
         self.__iconButtonOpen = PhotoImage(file="IDE/open.png")
         self.__iconButtonRun = PhotoImage(file="IDE/run.png")
         self.__textCode = None
         self.__setIDE()
-
     def __setIDE(self):
         self.__setBoxes()
         self.__setMenu()

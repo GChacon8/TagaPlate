@@ -1,6 +1,6 @@
 -- myLexCode: es un código de prueba en lenguaje TagaPlate
 
-Proc @myMoves(
+Proc @myMovesaaaaaaaaaaaaaaaaaaaaaaaa(
 	New @contador(Num,0)
 	Until(
 		MoveRight;
