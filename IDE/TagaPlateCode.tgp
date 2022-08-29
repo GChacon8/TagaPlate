@@ -11,7 +11,7 @@ Proc @myMoves(
 );
 
 Proc @Principal(
-	New @numVuelta(Num,3); 
+	New @numVuelta(Num,3);
 	New @seguir(Bool,False);
 	CALL( @myMoves );
 	PrintValues("Hola");
