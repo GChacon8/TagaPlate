@@ -70,12 +70,15 @@ class TextCodeIDE:
         self.__linenumbers = Text(self.__root, width=2,height=35,background="#3d3f42", foreground="#ffffff")
         self.__linenumbers.place(x=0,y=40)
         self.__linenumbers.tag_configure('line', justify='right')
+        self.__linenumbers.insert(INSERT, 1)
         self.__number_line()
-    def __number_line(self, interval=100):
+    def __number_line(self, interval=50):
         self.__linenumbers.config(state=NORMAL)
-        self.__linenumbers.delete("1.0","end")
-        for i in range(0,int(str(self.__textCode.index('end-1c')).split('.')[0])):
-            self.__linenumbers.insert(INSERT,str(i+1)+"\n")
+        if not int(str(self.__textCode.index('end-1c')).split('.')[0]) == int(str(self.__linenumbers.index('end-1c')).split('.')[0]):
+            self.__linenumbers.delete("1.0","end")
+            for i in range(int(str(self.__linenumbers.index('end-1c')).split('.')[0]),int(str(self.__textCode.index('end-1c')).split('.')[0])):
+                self.__linenumbers.insert(INSERT,str(i)+"\n")
+            self.__linenumbers.insert(INSERT,int(str(self.__textCode.index('end-1c')).split('.')[0]))
         self.__linenumbers.config(state=DISABLED)
         self.__linenumbers.after(interval, self.__number_line)
     def __createLabel(self):
@@ -86,7 +89,7 @@ class TextCodeIDE:
         self.__textCode.place(x=20, y=40)
         self.__textCode.tag_configure("current_line", background="#454647")
         self._highlight_current_line()
-    def _highlight_current_line(self, interval=100):
+    def _highlight_current_line(self, interval=50):
         '''Updates the 'current line' highlighting every "interval" milliseconds'''
         self.__textCode.tag_remove("current_line", 1.0, "end")
         self.__textCode.tag_add("current_line", "insert linestart", "insert lineend+1c")
@@ -97,15 +100,13 @@ class TextCodeIDE:
         self.__linenumbers.yview_moveto(position)
 
     def __updateScroll(self, first, last, type=None):
-        self.__textCode.yview_moveto(first)
-        self.__linenumbers.yview_moveto(first)
+        self.__textCode.yview_moveto(last)
+        self.__linenumbers.yview_moveto(last)
         self.__scroll.set(first, last)
 
     def __scrollLineNumberAndCodeBox(self):
         self.__scroll = Scrollbar(self.__root, orient='vertical', background="#5e5d5b")
         self.__scroll.place(x=3 + self.__textCode.winfo_reqwidth(), y=40, height=self.__textCode.winfo_reqheight())
-        #self.__textCode.configure(yscrollcommand=self.__scroll.set)
-        #self.__scroll.config(command=self.__textCode.yview)
         self.__scroll.config(command=self.__scrollBoth)
         self.__textCode.config(yscrollcommand=self.__updateScroll)
         self.__linenumbers.config(yscrollcommand=self.__updateScroll)

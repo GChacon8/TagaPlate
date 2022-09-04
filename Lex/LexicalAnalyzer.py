@@ -7,7 +7,7 @@ class LexicalAnalyzer:
                       "Until", "While", "Case", "When", "Then", "Else", "PrintValues",
                       "ADD", "SUB", "MUL", "DIV", "Norte", "Sur", "Este", "Oeste", "Break"]
     tokens = reserverdWords + ["ID", "Number", "COMMA", "LPARENTHESIS", "RPARENTHESIS", "SEMMICOLOM",
-                               "Less", "LessEqual", "Greater", "GreaterEqual", "Equals", "Different"]
+                               "Less", "LessEqual", "Greater", "GreaterEqual", "Equals", "Different","QUOTES","TEXTVALUE"]
     # reserverdWords definition for lex
     t_New = 'New'
     t_Num = 'Num'
@@ -47,6 +47,8 @@ class LexicalAnalyzer:
     t_SEMMICOLOM = ';'
     t_LPARENTHESIS = r'\('
     t_RPARENTHESIS = r'\)'
+    t_QUOTES = r'\"'
+    t_TEXTVALUE = r'.+'
 
     # Conditionals
     t_Less = r'<'
@@ -77,7 +79,7 @@ class LexicalAnalyzer:
         return t
 
     def t_PrintValues(self,t):
-        r'PrintValues(.*)'
+        r'PrintValues'
         if t.value.upper() in self.reserverdWords:
             t.value = t.value.upper()
             t.type = t.value
