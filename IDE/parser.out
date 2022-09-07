@@ -1,0 +1,137 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    ADD
+    Alter
+    AlterB
+    Break
+    CALL
+    Case
+    DIV
+    Different
+    Else
+    Equals
+    Este
+    Greater
+    GreaterEqual
+    Hammer
+    IsTrue
+    Less
+    LessEqual
+    MUL
+    MoveLeft
+    MoveRight
+    Norte
+    Oeste
+    PrintValues
+    QUOTES
+    Repeat
+    SUB
+    Stop
+    Sur
+    Then
+    Until
+    When
+    While
+
+Grammar
+
+Rule 0     S' -> Principal
+Rule 1     Principal -> Proc PRINCIPAL LPARENTHESIS instrucciones RPARENTHESIS
+Rule 2     instrucciones -> var
+Rule 3     instrucciones -> Values_f
+Rule 4     instrucciones -> Alter_f
+Rule 5     instrucciones -> AlterB_f
+Rule 6     instrucciones -> MoveRight_f
+Rule 7     instrucciones -> MoveLeft_f
+Rule 8     instrucciones -> Hammer_f
+Rule 9     instrucciones -> Stop_f
+Rule 10    instrucciones -> IsTrue_f
+Rule 11    instrucciones -> Repeat_f
+Rule 12    instrucciones -> Until_f
+Rule 13    instrucciones -> While_f
+Rule 14    instrucciones -> Case_f
+Rule 15    instrucciones -> PrintValues_f
+Rule 16    instrucciones -> empty
+Rule 17    Values_f -> Values LPARENTHESIS ID COMMA ValorDato RPARENTHESIS SEMMICOLOM
+Rule 18    Values_f -> LPARENTHESIS ID COMMA Alter_f RPARENTHESIS SEMMICOLOM
+Rule 19    var -> New ID COMMA LPARENTHESIS tipoDatos COMMA ValorDato RPARENTHESIS SEMMICOLOM
+Rule 20    tipoDatos -> Bool
+Rule 21    tipoDatos -> Num
+Rule 22    ValorDato -> True
+Rule 23    ValorDato -> False
+Rule 24    ValorDato -> Number
+
+Terminals, with rules where they appear
+
+ADD                  : 
+Alter                : 
+AlterB               : 
+Bool                 : 20
+Break                : 
+CALL                 : 
+COMMA                : 17 18 19 19
+Case                 : 
+DIV                  : 
+Different            : 
+Else                 : 
+Equals               : 
+Este                 : 
+False                : 23
+Greater              : 
+GreaterEqual         : 
+Hammer               : 
+ID                   : 17 18 19
+IsTrue               : 
+LPARENTHESIS         : 1 17 18 19
+Less                 : 
+LessEqual            : 
+MUL                  : 
+MoveLeft             : 
+MoveRight            : 
+New                  : 19
+Norte                : 
+Num                  : 21
+Number               : 24
+Oeste                : 
+PRINCIPAL            : 1
+PrintValues          : 
+Proc                 : 1
+QUOTES               : 
+RPARENTHESIS         : 1 17 18 19
+Repeat               : 
+SEMMICOLOM           : 17 18 19
+SUB                  : 
+Stop                 : 
+Sur                  : 
+Then                 : 
+True                 : 22
+Until                : 
+Values               : 17
+When                 : 
+While                : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+AlterB_f             : 5
+Alter_f              : 4 18
+Case_f               : 14
+Hammer_f             : 8
+IsTrue_f             : 10
+MoveLeft_f           : 7
+MoveRight_f          : 6
+Principal            : 0
+PrintValues_f        : 15
+Repeat_f             : 11
+Stop_f               : 9
+Until_f              : 12
+ValorDato            : 17 19
+Values_f             : 3
+While_f              : 13
+empty                : 16
+instrucciones        : 1
+tipoDatos            : 19
+var                  : 2
+
