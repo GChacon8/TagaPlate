@@ -1,3 +1,5 @@
+# El analizador léxico se encarga de reconocer los caracteres en el código
+
 import codecs
 import ply.lex as lex
 
@@ -9,6 +11,7 @@ reserverdWords = ["New", "Num", "Bool", "True", "False", "Proc", "CALL", "Values
 tokens = reserverdWords + ["ID", "Number", "COMMA", "LPARENTHESIS", "RPARENTHESIS", "SEMMICOLOM",
                             "Less", "LessEqual", "Greater", "GreaterEqual", "Equals", "Different","QUOTES"]
                             # falta TEXTVALUE
+                            
 # reserverdWords definition for lex
 t_New = 'New'
 t_Num = 'Num'
@@ -96,6 +99,7 @@ def t_newline(t):
 def t_error(t):
     print("Error en el token" + str(t) + " in line " + str(t.lexer.lineno) + "\n")
     t.lexer.skip(1)
+    errorMessage = ""
     errorMessage += "Error in line "+ str(t.lexer.lineno) + "\n"
 
 

@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter.tix import *
 # root window
-from LexicalAnalyzer import LexicalAnalyzer
+from LexicalAnalyzer import *
 
 class Errors:
     def __init__(self,root):
