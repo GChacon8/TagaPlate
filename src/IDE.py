@@ -1,7 +1,8 @@
+# Interfaz para programar y abrir archivos de tipo .tgp (Tagaplate)
+
 from tkinter import *
 from tkinter import filedialog
 from tkinter.tix import *
-# root window
 from LexicalAnalyzer import *
 
 class Errors:
@@ -98,7 +99,7 @@ class myMenu:
         self.__lastOpenedFile="Untitled.tgp"
         self.__errorMessage=""
     def compileProgram(self):
-        myLexer = LexicalAnalyzer(self.__lastOpenedFile)
+        myLexer = LexicalAnalyzer(self.__lastOpenedFile) # EL LexicalAnalyzer YA NO ES UNA CLASE. ARREGLAR
         tokenTable = myLexer.returnSymbolTable()  # LexToken(token,lexema,lineaDeCodigo,posicionEnLex)
         self.__errorMessage = myLexer.returnErrorMesage()
         print("Se imprime la tabla: ")
@@ -210,9 +211,9 @@ class WindowIDE:
         self.__root.configure(background="#5e5d5b")
         self.__menubar = Menu(self.__root)
         self.__menubar.configure(background="#5e5d5b", foreground="#ffffff")
-        self.__iconButtonSave = PhotoImage(file='IDE/Save_1.png')
-        self.__iconButtonOpen = PhotoImage(file="IDE/open.png")
-        self.__iconButtonRun = PhotoImage(file="IDE/run.png")
+        self.__iconButtonSave = PhotoImage(file='src/Images/Save_1.png')
+        self.__iconButtonOpen = PhotoImage(file="src/Images/open.png")
+        self.__iconButtonRun = PhotoImage(file="src/Images/run.png")
         self.__textCode = None
         self.__setIDE()
     def __setIDE(self):

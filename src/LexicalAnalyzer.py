@@ -104,7 +104,7 @@ def t_error(t):
 
 
 def testLexer():
-    file = r"..\IDE\TagaPlateCodeVar.tgp"
+    file = r"..\src\TestsFiles\TagaPlateCodeVar.tgp"
     fp = codecs.open(file, "r", "utf-8")
     theString = fp.read()
     analizador = lex.lex(module)
