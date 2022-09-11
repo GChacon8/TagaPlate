@@ -40,7 +40,7 @@ def p_conjuntoInstrucciones(p):
 """
 
 def p_instruccion(p): # Una instruccion puede ser cualquiera de las sig. funciones
-    '''instruccion : varDeclaration
+    '''instruccion : varDeclaration 
                      | Values_f
                      | Alter_f
                      | AlterB_f
@@ -126,6 +126,7 @@ def p_empty(p):
 # RECONOCIMIENTO DE CONDICIONALES ------------------------------------------
         # estas son importantes para definir condiciones de finalización en funciones como: Until, While y Case When
 
+""""
 def p_condicional_f(p):
     '''condicional : Greater_f
                     | GreaterEqual_f
@@ -157,7 +158,7 @@ def p_LessEqual_f(p):
 
 def p_Less_f(p):
     '''Less_f : expresion Less expresion'''
-    print("Less_f :", p)
+    print("Less_f :", p)"""
 
 # RECONOCIMIENTO DE VARIABLES---------------------------------------------------------
 
@@ -186,7 +187,7 @@ def p_valorDato(p):
 
 # LLAMAR A UNA FUNCIÓN ---------------------------------------------------------------
 
-def p_call_f():
+def p_call_f(p):
     '''call : CALL LPARENTHESIS ID RPARENTHESIS SEMMICOLOM'''
     print("call_f ", p)
 
