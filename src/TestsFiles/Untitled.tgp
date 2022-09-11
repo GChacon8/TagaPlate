@@ -1,1 +1,5 @@
-Proc @Principal(New @myVariable(Num,3););
+Proc @Principal(
+    New @myVar, (Num,3); 
+    New @myVar2, (Bool,True);
+    Values (@myVar, 7);
+    );

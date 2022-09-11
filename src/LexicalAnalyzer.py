@@ -107,7 +107,7 @@ def testLexer():
     file = r"..\src\TestsFiles\TagaPlateCodeVar.tgp"
     fp = codecs.open(file, "r", "utf-8")
     theString = fp.read()
-    analizador = lex.lex(module)
+    analizador = lex.lex() # antes tenía la palabra module dentro del paréntesis, pero daba problema porque ya no es una clase
     analizador.input(theString)
 
     while True:
@@ -119,7 +119,7 @@ def testLexer():
 def returnSymbolTable(file):
     fp = codecs.open(file,"r","utf-8")
     theCodeString = fp.read()
-    analyzer = lex.lex(module)
+    analyzer = lex.lex() # antes tenía la palabra module dentro del paréntesis, pero daba problema porque ya no es una clase
     analyzer.input(theCodeString)
     while True:
         tok = analyzer.token()
