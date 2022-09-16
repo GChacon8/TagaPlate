@@ -24,9 +24,14 @@ precedence = (
 # RECONOCIMIENTO DE FUNCIONES Y LOS PROC ---------------------------------------------
 
 def p_Proced(p):        # Reconoce los Procedimientos, es decir los: Proc @nombre();
-    '''Proced : Proc PRINCIPAL LPARENTHESIS instruccion instruccion RPARENTHESIS SEMMICOLOM
-              | Proc ID LPARENTHESIS instruccion instruccion RPARENTHESIS SEMMICOLOM'''
+    '''Proced : Proc PRINCIPAL LPARENTHESIS recursivo RPARENTHESIS SEMMICOLOM
+              | Proc ID LPARENTHESIS recursivo RPARENTHESIS SEMMICOLOM'''
     print("Proced ", p[4])
+def p_recursivo(p):
+    '''recursivo : recursivo instruccion
+                    | instruccion'''
+    pass
+
 
 """def p_listaInstrucciones(p):
     '''listaInstrucciones : conjuntoInstrucciones instruccion'''
