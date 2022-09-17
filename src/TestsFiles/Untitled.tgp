@@ -2,4 +2,5 @@ Proc @Principal(
     New @myVar1, (Num,3); 
     New @myVar2, (Bool,True);
     New @myVar3, (Num,5);
+    Values(@myVar1,5);
     );

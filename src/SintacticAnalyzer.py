@@ -1,5 +1,6 @@
 # El Parser/analizador sintáctico se encarga de reconocer la estructura de los bloques de código
 
+from unittest import result
 import ply.yacc as yacc
 import os
 import codecs
@@ -25,24 +26,16 @@ precedence = (
 
 def p_Proced(p):        # Reconoce los Procedimientos, es decir los: Proc @nombre();
     '''Proced : Proc PRINCIPAL LPARENTHESIS recursivo RPARENTHESIS SEMMICOLOM
-              | Proc ID LPARENTHESIS recursivo RPARENTHESIS SEMMICOLOM'''
+              '''
     print("Proced ", p[4])
+    # p[0]=Proced(p[1],"Proced")
 def p_recursivo(p):
     '''recursivo : recursivo instruccion
                     | instruccion'''
     pass
 
 
-"""def p_listaInstrucciones(p):
-    '''listaInstrucciones : conjuntoInstrucciones instruccion'''
-    p[1].append(p[2])
-    p[0] = p[1]
-    print("listaInstrucciones", p[1])
 
-def p_conjuntoInstrucciones(p):
-    '''conjuntoInstrucciones : instruccion'''
-    p[0] = ["conjuntoInstrucciones", p[1]]
-"""
 
 def p_instruccion(p): # Una instruccion puede ser cualquiera de las sig. funciones
     '''instruccion : varDeclaration 
@@ -128,42 +121,7 @@ def p_empty(p):
     print("Empty! ", p)
     pass
 
-# RECONOCIMIENTO DE CONDICIONALES ------------------------------------------
-        # estas son importantes para definir condiciones de finalización en funciones como: Until, While y Case When
 
-""""
-def p_condicional_f(p):
-    '''condicional : Greater_f
-                    | GreaterEqual_f
-                    | Equals_f
-                    | Different_f
-                    | LessEqual_f
-                    | Less_f'''
-    print("condicional ", p)
-
-def p_Greater_f(p):
-    '''Greater_f : expresion Greater expresion'''
-    print("Greater_f", p)
-
-def p_GreaterEqual_f(p):
-    '''GreaterEqual_f : expresion GreaterEqual expresion'''
-    print("GreaterEqual", p)
-
-def p_Equals_f(p):
-    '''Equals_f : expresion Equals expresion'''
-    print("Equals", p)
-
-def p_Different_f(p):
-    '''Different_f : expresion Different expresion'''
-    print("Different_f:", p)
-
-def p_LessEqual_f(p):
-    '''LessEqual_f : expresion LessEqual expresion'''
-    print("LessEquals", p)
-
-def p_Less_f(p):
-    '''Less_f : expresion Less expresion'''
-    print("Less_f :", p)"""
 
 # RECONOCIMIENTO DE VARIABLES---------------------------------------------------------
 
@@ -210,5 +168,12 @@ fp = codecs.open(file)
 cadena = fp.read()
 parser = yacc.yacc()
 fp.close()
+result=parser.parser(cadena)
+#result.imprimir("")
+#print result
+"""
+fileNew=open("semanticTree.vz","w")
+fileNew.write(result.transalte())
+fileNew.close()"""
 
 print("\nParser.parse(cadena) =  " + str(parser.parse(cadena)) + "\n")
