@@ -20,26 +20,26 @@ precedence = (
 )
 
 
-# PENDIENTE 3: modificar el archivo del IDE para que el Lexer ya no sea una clase
+
 # PENDIENTE 4: incluir el token TEXTVALUE (valores de texto, o sea strings) para probarlo en la funcion PrintValues (SIN ESA FUNCION EL PROYECTO VALE CERO)
 
 
 # RECONOCIMIENTO DE FUNCIONES Y LOS PROC ---------------------------------------------
-
 def p_start(p):
-    '''start : main'''
+    '''start : main
+            | main Proced'''
     p[0]=p[1]
 
 """def p_list_of_instrucciones():"""
 def p_main(p):
-    '''main :  Proc ID LPARENTHESIS recursivo RPARENTHESIS SEMMICOLOM'''
+    '''main :  Proc PRINCIPAL LPARENTHESIS recursivo RPARENTHESIS SEMMICOLOM'''
     p[0]=Main(p[4])
 
 
 def p_Proced(p): # Reconoce los Procedimientos, es decir los: Proc @nombre();
     '''Proced : Proc ID LPARENTHESIS recursivo RPARENTHESIS SEMMICOLOM'''
     p[0]=Process(p[2],p[4])
-    
+
     print("Proced ", p[4])
 
 
@@ -54,7 +54,7 @@ def p_recursivo2(p):
 
 
 def p_instruccion(p): # Una instruccion puede ser cualquiera de las sig. funciones
-    '''instruccion : varDeclaration 
+    '''instruccion : varDeclaration
                      | Values_f
                      | Alter_f
                      | AlterB_f
@@ -72,7 +72,7 @@ def p_instruccion(p): # Una instruccion puede ser cualquiera de las sig. funcion
                      | call_f
                      | empty'''
     p[0] = p[1]
-    print("instruccion ", p[1])    
+    print("instruccion ", p[1])
 
 
 def p_Values_f(p):
@@ -80,11 +80,11 @@ def p_Values_f(p):
      p[0]=Values(p[3],p[5])
 
 def p_valorDato(p):
-    '''valorDato : True 
-                | False  
+    '''valorDato : True
+                | False
                 | Number
-                | Alert_f
-                | Alert_B'''
+                | Alter_f
+                | AlterB_f'''
     p[0] = Valor(p[1])
     print("valorDato ", p[1])
 
@@ -115,7 +115,7 @@ def p_MoveLeft_f(p):
 
 def p_Hammer_f(p):
     '''Hammer_f : Hammer LPARENTHESIS Norte RPARENTHESIS SEMMICOLOM
-                 | Hammer LPARENTHESIS Sur RPARENTHESIS SEMMICOLOM 
+                 | Hammer LPARENTHESIS Sur RPARENTHESIS SEMMICOLOM
                  | Hammer LPARENTHESIS Este RPARENTHESIS SEMMICOLOM
                  | Hammer LPARENTHESIS Oeste RPARENTHESIS SEMMICOLOM'''
     p[0]=Hammer(p[3])
@@ -154,23 +154,24 @@ def p_Case2_f(p):
     '''Case2_f : Case ID opciones SEMMICOLOM
                 | Case ID opciones Else recursivo SEMMICOLOM '''
 
-# something engloba a los ID de variables, valores de texto entre comillas(QUOTES) y numeros. 
+# something engloba a los ID de variables, valores de texto entre comillas(QUOTES) y numeros.
 # El PrintValues puede imprimir varias cosas a la vez, por eso se incluye la posiblidad de poner coma (,)"
 
 #                  | QUOTES TEXTVALUE QUOTES COMMA something
  #                | QUOTES TEXTVALUE QUOTES                          incluir esas 2 cuando ya sirva el token TEXTVALUE y QUOTES
 
-def p_something(p): 
+def p_something(p):
     '''something : ID COMMA something
                  | expresionNum COMMA something
                  | expresionNum
                  | Number COMMA something
                  | Number
+                 | TEXTVALUE COMMA something
                  | empty'''
-    
+
 
 def p_PrintValues_f(p):
-    '''PrintValues_f : PrintValues LPARENTHESIS something RPARENTHESIS SEMMICOLOM'''
+    '''PrintValues_f : PrintValues LPARENTHESIS something RPARENTHESIS SEMMICOLOM '''
     p[0]=PrintValues(p[3])
 
     print("PrintValues ", p)
@@ -228,7 +229,7 @@ def p_Less_f(p):
     '''Less_f : expresionNum Less expresionNum SEMMICOLOM'''
     p[0]=Binar_Expression(p[1],OperationL.LESS,p[3])
     print("Less_f :", p)
-    
+
 
 # RECONOCIMIENTO DE VARIABLES---------------------------------------------------------
 
@@ -249,12 +250,7 @@ def p_tipoDatos(p):
     p[0] = p[1]
     print("tipoDato ", p[1])
 
-def p_valorDato(p):
-    '''valorDato : True 
-                | False  
-                | Number'''
-    #p[0] = p[1]
-    print("valorDato ", p[1])
+
 
 
 
@@ -289,7 +285,7 @@ def p_error(p):
 # PRUEBA DEL PARSER EN UN ARCHIVO ----------------------------------------------------
 
 print("\n")
-file = 'src/TestsFiles/Untitled.tgp'
+file = './TestsFiles/TagaPlateCode.tgp'
 fp = codecs.open(file)
 cadena = fp.read()
 parser = yacc.yacc()
