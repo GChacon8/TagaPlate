@@ -38,4 +38,4 @@ class OperationL(Enum) :
     EQUAL = 3
     DIFFERENT = 4
     GREATEREQUAL=5
-    LESSEQUAL=5
+    LESSEQUAL=6

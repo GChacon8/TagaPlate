@@ -284,13 +284,16 @@ def p_error(p):
 
 # PRUEBA DEL PARSER EN UN ARCHIVO ----------------------------------------------------
 
-print("\n")
-file = './TestsFiles/TagaPlateCode.tgp'
-fp = codecs.open(file)
-cadena = fp.read()
+#print("\n")
+#file = 'src/TestsFiles/Untitled.tgp'
+#fp = codecs.open(file)
+#cadena = fp.read()
 parser = yacc.yacc()
-fp.close()
-result=parser.parse(cadena)
+#fp.close()
+
+def parse(input) :
+    return parser.parse(input)
+#result=parser.parse(cadena)
 #result.imprimir("")
 #print result
 """
@@ -298,4 +301,4 @@ fileNew=open("semanticTree.vz","w")
 fileNew.write(result.transalte())
 fileNew.close()"""
 
-print("\nParser.parse(cadena) =  " + str(parser.parse(cadena)) + "\n")
+#print("\nParser.parse(cadena) =  " + str(parser.parse(cadena)) + "\n")

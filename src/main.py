@@ -1,7 +1,21 @@
-import gramatica as g
-import ts as TS
-from expresiones import *
+import codecs
 from instrucciones import *
+from tabla import *
+ts=Tabla_Of_Simbols()
+
+#f = open("./entrada.txt", "r")
+#input = f.read()
+
+
+file = 'src/TestsFiles/TagaPlateCode.tgp'
+fp = codecs.open(file)
+cadena = fp.read()
+fp.close()
+import SintacticAnalyzer as AST
+instrucciones=AST.parse(cadena)
+print(instrucciones)
+
+
 
 def procesar_instrucciones(instrucciones, ts):
     ## lista de instrucciones recolectadas
@@ -10,7 +24,7 @@ def procesar_instrucciones(instrucciones, ts):
         elif isinstance(instr, Alter) : procesar_Alter(instr, ts)
         elif isinstance(instr, AlterB) : procesar_AlterB(instr, ts)
         elif isinstance(instr, MoveRight) : procesar_MoveRight(instr, ts)
-        elif isinstance(instr, MoveLeft) : procesar_MoveLeft(instr, ts)
+        elif isinstance(instr, MoveLefth) : procesar_MoveLeft(instr, ts)
         elif isinstance(instr, Hammer) : procesar_Hammer(instr, ts)
         elif isinstance(instr, Stop) : procesar_Stop(instr, ts)
         elif isinstance(instr, IsTrue) : procesar_IsTrue(instr, ts)
@@ -55,8 +69,8 @@ def procesar_Until(instr, ts):
     pass 
 
 def procesar_While(instr, ts):
-    while resolver_expresion_logica(instr.expLogica, ts):
-        ts_local = TS.TablaDeSimbolos(ts.simbolos)
+    while resolver_expresion_logica(instr.condicion, ts):
+        ts_local = Tabla_Of_Simbols(ts.simbols)
         procesar_instrucciones(instr.intrucciones, ts_local)
 
 def procesar_Case(instr, ts):
@@ -70,3 +84,8 @@ def procesar_PrintValues(instr, ts):
 
 def procesar_When(instr, ts):
     pass
+
+
+def resolver_expresion_logica(expresion,ts):
+    pass
+#procesar_instrucciones(instrucciones,ts)
