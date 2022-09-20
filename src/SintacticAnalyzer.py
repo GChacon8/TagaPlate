@@ -26,31 +26,34 @@ precedence = (
 
 # RECONOCIMIENTO DE FUNCIONES Y LOS PROC ---------------------------------------------
 def p_start(p):
-    '''start : main
-            | main Proced'''
+    '''start : instrucciones
+            '''
     p[0]=p[1]
 
 """def p_list_of_instrucciones():"""
 def p_main(p):
-    '''main :  Proc PRINCIPAL LPARENTHESIS recursivo RPARENTHESIS SEMMICOLOM'''
+    '''main :  Proc PRINCIPAL LPARENTHESIS instrucciones RPARENTHESIS SEMMICOLOM'''
     p[0]=Main(p[4])
+
+   # print("Tipo de main", type(p[0]))
 
 
 def p_Proced(p): # Reconoce los Procedimientos, es decir los: Proc @nombre();
-    '''Proced : Proc ID LPARENTHESIS recursivo RPARENTHESIS SEMMICOLOM'''
+    '''Proced : Proc ID LPARENTHESIS instrucciones RPARENTHESIS SEMMICOLOM'''
     p[0]=Process(p[2],p[4])
 
     print("Proced ", p[4])
 
 
 
-def p_recursivo(p):
-    '''recursivo : recursivo instruccion
-                 '''
+def p_list_instrucciones(p):
+    '''instrucciones : instrucciones instruccion
+                '''
+    p[1].append(p[2])
     p[0]=p[1]
-def p_recursivo2(p):
-    '''recursivo : instruccion'''
-    p[0]=p[1]
+def p_one_instruccion(p):
+    '''instrucciones : instruccion'''
+    p[0]=[p[1]]
 
 
 def p_instruccion(p): # Una instruccion puede ser cualquiera de las sig. funciones
@@ -70,6 +73,8 @@ def p_instruccion(p): # Una instruccion puede ser cualquiera de las sig. funcion
                      | Case2_f
                      | PrintValues_f
                      | call_f
+                     | main
+                     | Proced
                      | empty'''
     p[0] = p[1]
     print("instruccion ", p[1])
@@ -105,12 +110,12 @@ def p_AlterB_f(p):      # Altera el valor de una variables booleana (Alter_f per
 
 def p_MoveRight_f(p):
     '''MoveRight_f : MoveRight SEMMICOLOM'''
-    p[0]=p[1]
-    print("MoveRight_f", p)
+    p[0]=MoveRight()
+    print("MoveRight_f")
 
 def p_MoveLeft_f(p):
     '''MoveLeft_f : MoveLeft SEMMICOLOM'''
-    p[0]=p[1]
+    p[0]=MoveLefth()
     print("MoveLeft_f", p)
 
 def p_Hammer_f(p):
@@ -127,32 +132,32 @@ def p_Stop_f(p):
     print("Stop_f", p)
 
 def p_Repeat_f(p):
-    '''Repeat_f : Repeat LPARENTHESIS recursivo Break RPARENTHESIS SEMMICOLOM'''
+    '''Repeat_f : Repeat LPARENTHESIS instrucciones Break RPARENTHESIS SEMMICOLOM'''
     p[0]=Repeat(p[3])
     print("Repeat_f", p)
 
 def p_Until_f(p):
-    '''Until_f : Until LPARENTHESIS recursivo RPARENTHESIS condicional SEMMICOLOM'''
+    '''Until_f : Until LPARENTHESIS instrucciones RPARENTHESIS condicional SEMMICOLOM'''
     p[0]=Until(p[3])
     print("Until_f", p)
 
 def p_While_f(p):
-    '''While_f : While condicional LPARENTHESIS recursivo RPARENTHESIS SEMMICOLOM'''
+    '''While_f : While condicional LPARENTHESIS instrucciones RPARENTHESIS SEMMICOLOM'''
     p[0]=While(p[2],p[4])
     print("While_f", p)
 
 def p_Case_f(p):
-    '''Case_f : Case When LPARENTHESIS condicional RPARENTHESIS Then LPARENTHESIS recursivo RPARENTHESIS SEMMICOLOM
-              | Case When LPARENTHESIS condicional RPARENTHESIS Then LPARENTHESIS recursivo RPARENTHESIS Else LPARENTHESIS recursivo RPARENTHESIS SEMMICOLOM'''
+    '''Case_f : Case When LPARENTHESIS condicional RPARENTHESIS Then LPARENTHESIS instrucciones RPARENTHESIS SEMMICOLOM
+              | Case When LPARENTHESIS condicional RPARENTHESIS Then LPARENTHESIS instrucciones RPARENTHESIS Else LPARENTHESIS instrucciones RPARENTHESIS SEMMICOLOM'''
     print("Case_f ", p)
 
 def p_opciones(p): # otra funcion recursiva para permitir varios "When ... Then"
-    '''opciones : opciones When valorDato Then LPARENTHESIS recursivo RPARENTHESIS
-                | When valorDato Then LPARENTHESIS recursivo RPARENTHESIS'''
+    '''opciones : opciones When valorDato Then LPARENTHESIS instrucciones RPARENTHESIS
+                | When valorDato Then LPARENTHESIS instrucciones RPARENTHESIS'''
 
 def p_Case2_f(p):
     '''Case2_f : Case ID opciones SEMMICOLOM
-                | Case ID opciones Else recursivo SEMMICOLOM '''
+                | Case ID opciones Else instrucciones SEMMICOLOM '''
 
 # something engloba a los ID de variables, valores de texto entre comillas(QUOTES) y numeros.
 # El PrintValues puede imprimir varias cosas a la vez, por eso se incluye la posiblidad de poner coma (,)"

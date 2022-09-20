@@ -1,10 +1,13 @@
 -- myLexCode: es un codigo de prueba en lenguaje TagaPlate
+
 Proc @myMoves(
-	
-	Until(
-		MoveRight;
-		Hammer(N);
-		Values(@contador, Alter(@contador,ADD,1););
-	)
-	@numVuelta > @contador;
+	New @contador, (Num,0);
+	MoveRight;
+
+);
+
+
+Proc @Principal(
+	MoveRight;
+	New @nuevo, (Num,2);
 );

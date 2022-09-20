@@ -1,26 +1,28 @@
 import codecs
 from instrucciones import *
 from tabla import *
+from process import *
 ts=Tabla_Of_Simbols()
 
 #f = open("./entrada.txt", "r")
 #input = f.read()
 
 
-file = 'src/TestsFiles/TagaPlateCode.tgp'
+file = 'src/TestsFiles/Untitled.tgp'
 fp = codecs.open(file)
 cadena = fp.read()
 fp.close()
 import SintacticAnalyzer as AST
-instrucciones=AST.parse(cadena)
-print(instrucciones)
+instruccionesl=AST.parse(cadena)
+print(instruccionesl)
 
 
 
-def procesar_instrucciones(instrucciones, ts):
+def procesar_instrucciones(instruccionesl, ts):
     ## lista de instrucciones recolectadas
-    for instr in instrucciones :
-        if isinstance(instr, Values) : procesar_Values(instr, ts)
+    for instr in instruccionesl :
+        if isinstance(instr,Main): procesar_Principal(instr,ts)
+        elif isinstance(instr, Values) : procesar_Values(instr, ts)
         elif isinstance(instr, Alter) : procesar_Alter(instr, ts)
         elif isinstance(instr, AlterB) : procesar_AlterB(instr, ts)
         elif isinstance(instr, MoveRight) : procesar_MoveRight(instr, ts)
@@ -36,7 +38,8 @@ def procesar_instrucciones(instrucciones, ts):
         elif isinstance(instr, PrintValues) : procesar_PrintValues(instr, ts)
         elif isinstance(instr, When) : procesar_When(instr, ts)
         else : print('Error: instrucción no válida')
-
+def procesar_Principal(instr,ts):
+    print("hi")
 
 def procesar_Values(instr, ts):
     pass
@@ -48,7 +51,7 @@ def procesar_AlterB(instr, ts):
     pass
 
 def procesar_MoveRight(instr, ts):
-    pass
+    print("hola")
 
 def procesar_MoveLeft(instr, ts):
     pass
@@ -88,4 +91,4 @@ def procesar_When(instr, ts):
 
 def resolver_expresion_logica(expresion,ts):
     pass
-#procesar_instrucciones(instrucciones,ts)
+procesar_instrucciones(instruccionesl,ts)
