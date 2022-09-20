@@ -9,8 +9,7 @@ reserverdWords = ["New", "Num", "Bool", "True", "False", "Proc", "CALL", "Values
                     "Until", "While", "Case", "When", "Then", "Else", "PrintValues",
                     "ADD", "SUB", "MUL", "DIV", "Norte", "Sur", "Este", "Oeste", "Break", "PRINCIPAL"]
 tokens = reserverdWords + ["ID", "Number", "COMMA", "LPARENTHESIS", "RPARENTHESIS", "SEMMICOLOM",
-                            "Less", "LessEqual", "Greater", "GreaterEqual", "Equals", "Different","QUOTES"]
-                            # falta TEXTVALUE
+                            "Less", "LessEqual", "Greater", "GreaterEqual", "Equals", "Different","TEXTVALUE"]
                             
 # reserverdWords definition for lex
 t_New = 'New'
@@ -44,7 +43,7 @@ t_Sur = 'S'
 t_Este = 'E'
 t_Oeste = 'O'
 t_Break = 'Break'
-t_PRINCIPAL = '@Principal'
+t_ID = r'@[a-zA-Z0-9_#][a-zA-Z0-9_#][a-zA-Z0-9_#]{0,7}'
 
 # Special Characters
 t_ignore = '\t \r'
@@ -52,8 +51,7 @@ t_COMMA = r','
 t_SEMMICOLOM = ';'
 t_LPARENTHESIS = r'\('
 t_RPARENTHESIS = r'\)'
-t_QUOTES = r'\"'
-#t_TEXTVALUE = r'.+'
+t_TEXTVALUE = r'\".+\"'
 
 # Conditionals
 t_Less = r'<'
@@ -64,11 +62,11 @@ t_Equals = r'=='
 t_Different = r'<>'
 
 errorMessage = ""
-SymbolTable = ""
-
+currentLineError = 0
+lastLineError = currentLineError
 # Review error with ID extension (number of characters)
-def t_ID(t):
-    r'@[a-zA-Z0-9_#][a-zA-Z0-9_#][a-zA-Z0-9_#]{0,7}'
+def t_PRINCIPAL(t):
+    r'@Principal'
     if t.value.upper() in reserverdWords:
         t.value = t.value.upper()
         t.type = t.value
@@ -97,10 +95,13 @@ def t_newline(t):
     t.lexer.lineno += len(t.value)
 
 def t_error(t):
+    currentLineError = t.lexer.lineno
     print("Error en el token" + str(t) + " in line " + str(t.lexer.lineno) + "\n")
     t.lexer.skip(1)
-    errorMessage = ""
-    errorMessage += "Error in line "+ str(t.lexer.lineno) + "\n"
+    global errorMessage, lastLineError
+    if lastLineError != currentLineError:
+        errorMessage += "Error de sintáxis en línea "+ str(t.lexer.lineno) + "\n"
+    lastLineError = currentLineError
 
 
 def testLexer():
@@ -117,18 +118,21 @@ def testLexer():
         print(tok)
 
 def returnSymbolTable(file):
+    symbolTable = ""
+    global errorMessage
+    errorMessage = ""
     fp = codecs.open(file,"r","utf-8")
     theCodeString = fp.read()
-    analyzer = lex.lex() # antes tenía la palabra module dentro del paréntesis, pero daba problema porque ya no es una clase
+    analyzer = lex.lex()
     analyzer.input(theCodeString)
     while True:
         tok = analyzer.token()
         if not tok:
             break
-    symbolTable += str(tok)+"\n"
+        symbolTable += str(tok)+"\n"
     return symbolTable
 
-def returnErrorMesage():
-    return errorMessage
+def returnErrorLexicalMesage():
+    return errorMessage if errorMessage!="" else True
 
 analizador =lex.lex()

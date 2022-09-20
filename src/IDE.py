@@ -2,7 +2,6 @@
 
 from tkinter import *
 from tkinter import filedialog
-from tkinter.tix import *
 from LexicalAnalyzer import *
 
 class Errors:
@@ -97,19 +96,31 @@ class myMenu:
         self.__file_menu = Menu(self.__menubar,tearoff=0)
         self.__createMenu(iconButtonSave,iconButtonOpen,iconButtonRun)
         self.__lastOpenedFile="Untitled.tgp"
-        self.__errorMessage=""
+        self.__errorMessage=["","",""] # [ErroresLexicos, ErroresSintácticos,"ErroresSemánticos"]
     def compileProgram(self):
-        myLexer = LexicalAnalyzer(self.__lastOpenedFile) # EL LexicalAnalyzer YA NO ES UNA CLASE. ARREGLAR
-        tokenTable = myLexer.returnSymbolTable()  # LexToken(token,lexema,lineaDeCodigo,posicionEnLex)
-        self.__errorMessage = myLexer.returnErrorMesage()
-        print("Se imprime la tabla: ")
-        print(tokenTable)
+        self.saveFile()
         myChild = self.__root.winfo_children()
+        myChild[7].config(state=NORMAL)
+        myChild[7].delete("1.0", "end")
         myChild[9].config(state=NORMAL)
-        myChild[9].insert(INSERT,self.__errorMessage)
-        myChild[7].insert(INSERT, tokenTable)
-    def returnErrorMessage(self):
-        return self.__errorMessage
+        myChild[9].delete("1.0", "end")
+        # LexToken(token,lexema,lineaDeCodigo,posicionEnLex)
+        tokenTable = returnSymbolTable(self.__lastOpenedFile)
+        self.__errorMessage[0] = returnErrorLexicalMesage()
+        #self.__errorMessage[1] = returnErrorSintacticoMessage()
+        #self.__errorMessage[2] = returnErrorSemanticoMessage()
+        #print("Se imprime la tabla: ")
+        #print(tokenTable)
+        if self.__errorMessage[0]==True:
+            myChild[7].insert(INSERT, "Análisis léxico exitoso")
+        elif self.__errorMessage[1] == True:
+            myChild[7].insert(INSERT, "Análisis sintáctico exitoso")
+        elif self.__errorMessage[2] == True:
+            myChild[7].insert(INSERT, "Análisis semántico exitoso")
+        else:
+            myChild[9].insert(INSERT, self.__errorMessage[0])
+        myChild[7].config(state=DISABLED)
+        myChild[9].config(state=DISABLED)
     def runProgram(self):
         myChild = self.__root.winfo_children()
         numero=0
@@ -142,7 +153,6 @@ class myMenu:
         file = open(self.__lastOpenedFile, 'w')
         print(file.name)
         code = self.__textCode.get("1.0", "end-1c")
-        # print(code)
         file.write(code)
         file.close()
         self.__lastOpenedFile = str(file.name)
@@ -158,10 +168,8 @@ class myMenu:
 
     def openFile(self):
         fileName = self.browseFiles()
-        # print(fileName)
         file = open(fileName, 'r', encoding="UTF-8")
         code = file.read()
-        # print(code)
         self.__textCode.insert(END, code)
         file.close()
         self.__lastOpenedFile = str(file.name)
@@ -197,11 +205,7 @@ class myMenu:
         openFileButton.place(x=35, y=0)
         runButton = Button(self.__root, text="run", image=iconButtonRun, width="30", height="30")
         runButton.place(x=70, y=0)
-        tip = Balloon(self.__root)
-        # Bind the tooltip with button
-        tip.bind_widget(openFileButton, balloonmsg="open")
-        tip.bind_widget(saveButton, balloonmsg="save")
-        tip.bind_widget(runButton, balloonmsg="run")
+
 
 class WindowIDE:
     def __init__(self):
@@ -211,9 +215,9 @@ class WindowIDE:
         self.__root.configure(background="#5e5d5b")
         self.__menubar = Menu(self.__root)
         self.__menubar.configure(background="#5e5d5b", foreground="#ffffff")
-        self.__iconButtonSave = PhotoImage(file='src/Images/Save_1.png')
-        self.__iconButtonOpen = PhotoImage(file="src/Images/open.png")
-        self.__iconButtonRun = PhotoImage(file="src/Images/run.png")
+        self.__iconButtonSave = PhotoImage(file='./Images/Save_1.png')
+        self.__iconButtonOpen = PhotoImage(file="./Images/open.png")
+        self.__iconButtonRun = PhotoImage(file="./Images/run.png")
         self.__textCode = None
         self.__setIDE()
     def __setIDE(self):
@@ -232,7 +236,6 @@ class WindowIDE:
     def saveFile(self):
         file = open('TagaPlateCode.tgp', 'w')
         code = self.__textCode.get("1.0", "end-1c")
-        # print(code)
         file.write(code)
         file.close()
 
@@ -246,10 +249,8 @@ class WindowIDE:
 
     def openFile(self):
         fileName = self.browseFiles()
-        # print(fileName)
         file = open(fileName, 'r', encoding="UTF-8")
         code = file.read()
-        # print(code)
         self.__textCode.insert(END, code)
         file.close()
 
