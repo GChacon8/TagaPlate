@@ -57,7 +57,6 @@ class IsTrue(Instrucciones):
     def __init__(self,id):
         self.id=id
 
-
 class Repeat(Instrucciones):
     def __init__(self,instrucciones=[]):
         self.instrucciones=instrucciones
@@ -70,11 +69,17 @@ class Call(Instrucciones):
     def __init__(self,id):
         self.id=id
 
+class CaseWhen(Instrucciones):
+    def __init__(self, condicion, instrucciones=[]):
+        self.condicion = condicion
+        self.instrucciones=instrucciones
 
+class Case(Instrucciones):
+    def __init__(self, id, instrucciones=[]):
+        self.id = id
+        self.instrucciones=instrucciones
 
-
-
-
-        
-
-
+class When(Instrucciones):
+    def __init__(self, valor, instrucciones=[]):
+        self.valor = valor
+        self.instrucciones = instrucciones
