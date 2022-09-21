@@ -1,4 +1,5 @@
 import codecs
+from operator import truediv
 from instrucciones import *
 from tabla import *
 from process import *
@@ -17,12 +18,25 @@ instruccionesl=AST.parse(cadena)
 print(instruccionesl)
 
 
+def validar_Principal(instrucciones):
+    for i in instrucciones:
+        if type(i)==Main:
+            return True
+        else:
+            return False
 
+
+
+
+         
 def procesar_instrucciones(instruccionesl, ts):
     ## lista de instrucciones recolectadas
+    
+        
     for instr in instruccionesl :
         if isinstance(instr,Main): procesar_Principal(instr,ts)
         elif isinstance(instr, Values) : procesar_Values(instr, ts)
+        elif isinstance(instr, Process) : procesar_Proces(instr, ts)
         elif isinstance(instr, Alter) : procesar_Alter(instr, ts)
         elif isinstance(instr, AlterB) : procesar_AlterB(instr, ts)
         elif isinstance(instr, MoveRight) : procesar_MoveRight(instr, ts)
@@ -38,8 +52,13 @@ def procesar_instrucciones(instruccionesl, ts):
         elif isinstance(instr, PrintValues) : procesar_PrintValues(instr, ts)
         elif isinstance(instr, When) : procesar_When(instr, ts)
         else : print('Error: instrucción no válida')
+       
 def procesar_Principal(instr,ts):
-    print("hi")
+    for i in instr.instrucciones:
+        if isinstance(i,MoveRight):
+            print("mover dercho")
+
+
 
 def procesar_Values(instr, ts):
     pass
@@ -91,4 +110,15 @@ def procesar_When(instr, ts):
 
 def resolver_expresion_logica(expresion,ts):
     pass
-procesar_instrucciones(instruccionesl,ts)
+def procesar_Proces(instr, ts):
+    print("move proces")
+
+
+def procesar(Condicion,ts,instruccionesl):
+    if Condicion==True:
+        procesar_instrucciones(instruccionesl,ts)
+    else:
+        print("no existe la funcion principal")
+
+
+procesar(validar_Principal(instruccionesl),ts,instruccionesl)

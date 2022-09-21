@@ -34,6 +34,7 @@ def p_start(p):
 def p_main(p):
     '''main :  Proc PRINCIPAL LPARENTHESIS instrucciones RPARENTHESIS SEMMICOLOM'''
     p[0]=Main(p[4])
+    print("MAIN",p[4])
 
    # print("Tipo de main", type(p[0]))
 
