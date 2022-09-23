@@ -40,16 +40,33 @@ def validar_Principal(instrucciones):
             return False
 
 
-
+def procesar_instrucciones(instrucciones, ts):
+    for i in instrucciones:
+        if isinstance(i, Values) : procesar_Values(i, ts)
+        elif isinstance(i, Process) : procesar_Proces(i, ts)
+        elif isinstance(i, Alter) : procesar_Alter(i, ts)
+        elif isinstance(i, AlterB) : procesar_AlterB(i, ts)
+        elif isinstance(i, MoveRight) : procesar_MoveRight(i, ts)
+        elif isinstance(i, MoveLefth) : procesar_MoveLeft(i, ts)
+        elif isinstance(i, Hammer) : procesar_Hammer(i, ts)
+        elif isinstance(i, Stop) : procesar_Stop(i, ts)
+        elif isinstance(i, IsTrue) : procesar_IsTrue(i, ts)
+        elif isinstance(i, Repeat) : procesar_Repeat(i, ts)
+        elif isinstance(i, Until) : procesar_Until(i, ts)
+        elif isinstance(i, While) : procesar_While(i, ts)
+        elif isinstance(i, Case) : procesar_Case(i, ts)
+        elif isinstance(i, CaseWhen) : procesar_CaseWhen(i, ts)
+        elif isinstance(i, PrintValues) : procesar_PrintValues(i, ts)
+        elif isinstance(i, When) : procesar_When(i, ts)
+        else : procesar_declaracion(i, ts)
 
          
-def procesar_instrucciones(instrucciones, ts):
+def procesar_funciones(instrucciones, ts):
     ## lista de instrucciones recolectadas
     
         
     for instr in instrucciones :
         if isinstance(instr,Main): procesar_Principal(instr,ts)
-        elif isinstance(instr, Values) : procesar_Values(instr, ts)
         elif isinstance(instr, Process) : procesar_Proces(instr, ts)
         else : print('Error: instrucción no válida')
        
@@ -97,12 +114,22 @@ def procesar_Values(instr, ts):
 def procesar_Alter(instr, ts):
     global code 
     varName = instr.id[1:]
-    code += "\t" + varName + instr.operator + "= " + instr.valor.valor + "\n"
+    operacion = ""
+    if instr.operador == "ADD":
+        operacion = "+"
+    elif instr.operador == "SUB":
+        operacion = "-"
+    elif instr.operador == "MUL":
+        operacion = "*"
+    else:
+        operacion = "/"
+    code += "\t" + varName + " " + operacion + "= " + instr.valor.valor + "\n"
 
 def procesar_AlterB(instr, ts):
     global code
     varName = instr.id[1:]
-    code += "\t" + varName + "= " + "not " + varName + "\n"
+    code += "\t"+varName+" = " + "not" + varName + "\n"
+
 
 def procesar_MoveRight(instr, ts):
     global code
@@ -116,9 +143,9 @@ def procesar_Hammer(instr, ts):
     global code
     varPosicion = instr.position
     if varPosicion == 'N' or varPosicion == 'S':
-        code += "\tboard.digital[10].write(40)\n \tsleep(6000)\n"
+        code += "\tboard.digital[10].write(40)\n\tsleep(6000)\n"
     else:
-        code += "\tboard.digital[9].write(40)\n \tsleep(6000)\n"
+        code += "\tboard.digital[9].write(40)\n\tsleep(6000)\n"
 
 def procesar_Stop(instr, ts):
     global code
@@ -127,13 +154,14 @@ def procesar_Stop(instr, ts):
 def procesar_IsTrue(instr, ts):
     global code
     if instr.valor.id:
-        code += "\t return True \n"
+        code += "\treturn True\n"
     else:
-        code += "\t return False \n" 
+        code += "\treturn False\n" 
 
 def procesar_Repeat(instr, ts):
     global code
-    procesar_instrucciones(instr.valor.instrucciones, ts)
+    code += "\twhile True:\n"
+    procesar_instrucciones(instr.instrucciones, ts)
 
 def procesar_Until(instr, ts):
     global code
@@ -178,7 +206,7 @@ def procesar_Proces(instr, ts):
 
 def procesar(Condicion,ts,instruccionesl):
     if Condicion==True:
-        procesar_instrucciones(instruccionesl,ts)
+        procesar_funciones(instruccionesl,ts)
     else:
         print("no existe la funcion principal")
 
