@@ -74,8 +74,8 @@ class TextCodeIDE:
         self.__linenumbers.yview_moveto(position)
 
     def __updateScroll(self, first, last, type=None):
-        self.__textCode.yview_moveto(last)
-        self.__linenumbers.yview_moveto(last)
+        self.__textCode.yview_moveto(first)
+        self.__linenumbers.yview_moveto(first)
         self.__scroll.set(first, last)
 
     def __scrollLineNumberAndCodeBox(self):

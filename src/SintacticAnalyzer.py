@@ -21,7 +21,6 @@ precedence = (
 
 
 
-# PENDIENTE 4: incluir el token TEXTVALUE (valores de texto, o sea strings) para probarlo en la funcion PrintValues (SIN ESA FUNCION EL PROYECTO VALE CERO)
 
 
 # RECONOCIMIENTO DE FUNCIONES Y LOS PROC ---------------------------------------------
@@ -291,15 +290,26 @@ def p_call_f(p):
 # RECONOCIMIENTO DE ERRORES LÉXICOS --------------------------------------------------
 
 def p_error(p):
-     print("\nSyntax error in input! ", p)
+    currentLineErr = p.lineno
+    global errorMsg, lastLineErr
+    #print("\nSyntax error in  " + str(p) + "in line " + str(p.lineno))
+    parser.errok()
+    previous_token = parser.symstack[-1]
+    if type(previous_token) == type(p):
+        if lastLineErr != currentLineErr:
+            errorMsg += "Error sintactico en linea " + str(previous_token) + "\n"
+            print("\nSyntax error in  " + str(previous_token) + "in line " + str(parser.symstack[-1].lineno))
+            #print("linea de error ", currentLineErr)
+    else:
+        if lastLineErr != currentLineErr:
+            errorMsg += "Error sintactico en linea " + str(p) + "\n"
+            print("\nSyntax error in  " + str(p) + "in line " + str(p.lineno))
+            #print("linea de error ", currentLineErr)
 
-
-
-
+    lastLineErr = currentLineErr
 
 
 # PRUEBA DEL PARSER EN UN ARCHIVO ----------------------------------------------------
-
 #print("\n")
 #file = 'src/TestsFiles/Untitled.tgp'
 #fp = codecs.open(file)

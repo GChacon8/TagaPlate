@@ -86,8 +86,13 @@ def t_PrintValues(t):
         t.type = t.value
     return t
 
+
+comentarioPrimerLinea = False
 def t_Comment(t):
     r'--.*'
+    global comentarioPrimerLinea
+    if t.lexer.lineno == 1:
+        comentarioPrimerLinea = True
     pass
 
 def t_newline(t):
