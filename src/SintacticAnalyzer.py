@@ -13,6 +13,11 @@ from expresion import *
 
 # PRECEDENCIA: SABER DE QUÉ LADO ANALIZAR A LOS TOKENS SIGUIENTES DE LOS MENCIONADOS AQUÍ
 
+errorMsg = ""
+lastLineErr = ""
+currentLineErr = ""
+backUp = [{}]
+
 precedence = (
     ('right', 'New'),
     ('left', 'Less','LessEqual', 'Greater', 'GreaterEqual', 'Equals', 'Different'),
@@ -100,7 +105,7 @@ def p_Alter_f(p):       # Altera ligeramente el valor de una variable y retorna 
                | Alter LPARENTHESIS ID COMMA MUL COMMA valorDato RPARENTHESIS SEMMICOLOM
                | Alter LPARENTHESIS ID COMMA DIV COMMA valorDato RPARENTHESIS SEMMICOLOM'''
 
-    p[0]=Alter(p[3],p[7])
+    p[0]=Alter(p[3],p[5], p[7])
     print("Alter_f ", p[4])
 
 def p_AlterB_f(p):      # Altera el valor de una variables booleana (Alter_f pero solo con True y False) y retorna dicho valor nuevo
@@ -265,21 +270,6 @@ def p_tipoDatos(p):
     p[0] = p[1]
     print("tipoDato ", p[1])
 
-
-
-
-
-
-
-
-
-
-
-
-"""def p_Values_f(p):      # Cambia el valor de una variable
-    '''Values_f : Values LPARENTHESIS ID COMMA valorDato RPARENTHESIS SEMMICOLOM
-               '
-    print("Values_f", p[2])"""
 # LLAMAR A UNA FUNCIÓN ---------------------------------------------------------------
 
 def p_call_f(p):
@@ -290,36 +280,52 @@ def p_call_f(p):
 # RECONOCIMIENTO DE ERRORES LÉXICOS --------------------------------------------------
 
 def p_error(p):
-    currentLineErr = p.lineno
-    global errorMsg, lastLineErr
-    #print("\nSyntax error in  " + str(p) + "in line " + str(p.lineno))
-    parser.errok()
+    global errorMsg, lastLineErr, backUp
+
+    currentLineErr = str(p.lineno)
+
     previous_token = parser.symstack[-1]
-    if type(previous_token) == type(p):
-        if lastLineErr != currentLineErr:
-            errorMsg += "Error sintactico en linea " + str(previous_token) + "\n"
-            print("\nSyntax error in  " + str(previous_token) + "in line " + str(parser.symstack[-1].lineno))
-            #print("linea de error ", currentLineErr)
+
+    if p:
+        if type(previous_token) == type(p):
+            print("PRIEMRA ")
+
+            if lastLineErr != currentLineErr:
+                errorMsg += "Error sintactico en linea " + str(previous_token.lineno) + "\n"
+                print("\nSyntax error in  " + str(previous_token) + "in line " + str(parser.symstack[-1].lineno))
+                parser.errok()
+
+        else:
+            print("SEGUNDA ")
+            if lastLineErr != currentLineErr:
+                errorMsg += "Error sintactico en linea " + str(p.lineno) + "\n"
+                print("\nSyntax error in  " + str(p) + "in line " + str(p.lineno))
+    
     else:
-        if lastLineErr != currentLineErr:
-            errorMsg += "Error sintactico en linea " + str(p) + "\n"
-            print("\nSyntax error in  " + str(p) + "in line " + str(p.lineno))
-            #print("linea de error ", currentLineErr)
+        print("END OF FILEEEEEEEE ")
 
     lastLineErr = currentLineErr
 
+    #backUp += [str(parser.symstack[-1].lineno)]
+
+
+
+def returnErrorSintacticoMessage():
+    return errorMsg if errorMsg!="" else True
 
 # PRUEBA DEL PARSER EN UN ARCHIVO ----------------------------------------------------
 #print("\n")
-#file = 'src/TestsFiles/Untitled.tgp'
-#fp = codecs.open(file)
-#cadena = fp.read()
+file = 'src/TestsFiles/TagaPlateCode.tgp'
+fp = codecs.open(file)
+cadena = fp.read()
 parser = yacc.yacc()
-#fp.close()
+fp.close()
 
-def parse(input) :
+def parseM(input) :
     return parser.parse(input)
-#result=parser.parse(cadena)
+
+result =  parseM(cadena)
+
 #result.imprimir("")
 #print result
 """

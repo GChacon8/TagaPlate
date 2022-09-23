@@ -3,6 +3,8 @@
 from tkinter import *
 from tkinter import filedialog
 from LexicalAnalyzer import *
+from SintacticAnalyzer import parseM, returnErrorSintacticoMessage
+
 
 class Errors:
     def __init__(self,root):
@@ -97,6 +99,7 @@ class myMenu:
         self.__createMenu(iconButtonSave,iconButtonOpen,iconButtonRun)
         self.__lastOpenedFile="Untitled.tgp"
         self.__errorMessage=["","",""] # [ErroresLexicos, ErroresSintácticos,"ErroresSemánticos"]
+
     def compileProgram(self):
         self.saveFile()
         myChild = self.__root.winfo_children()
@@ -105,22 +108,34 @@ class myMenu:
         myChild[9].config(state=NORMAL)
         myChild[9].delete("1.0", "end")
         # LexToken(token,lexema,lineaDeCodigo,posicionEnLex)
-        tokenTable = returnSymbolTable(self.__lastOpenedFile)
+
+        #tokenTable = returnSymbolTable(self.__lastOpenedFile)
+        parser = parseM(self.__lastOpenedFile)
+
         self.__errorMessage[0] = returnErrorLexicalMesage()
-        #self.__errorMessage[1] = returnErrorSintacticoMessage()
+        self.__errorMessage[1] = returnErrorSintacticoMessage()
+
         #self.__errorMessage[2] = returnErrorSemanticoMessage()
         #print("Se imprime la tabla: ")
         #print(tokenTable)
         if self.__errorMessage[0]==True:
-            myChild[7].insert(INSERT, "Análisis léxico exitoso")
-        elif self.__errorMessage[1] == True:
-            myChild[7].insert(INSERT, "Análisis sintáctico exitoso")
-        elif self.__errorMessage[2] == True:
-            myChild[7].insert(INSERT, "Análisis semántico exitoso")
+            myChild[7].insert(INSERT, "Análisis léxico exitoso \n")
         else:
             myChild[9].insert(INSERT, self.__errorMessage[0])
+
+        if self.__errorMessage[1] == True:
+            myChild[7].insert(INSERT, "Análisis sintáctico exitoso \n")
+        else:
+            myChild[9].insert(INSERT, self.__errorMessage[1])
+
+        if self.__errorMessage[2] == True:
+            myChild[7].insert(INSERT, "Análisis semántico exitoso \n ")
+        else:
+            pass
+
         myChild[7].config(state=DISABLED)
         myChild[9].config(state=DISABLED)
+
     def runProgram(self):
         myChild = self.__root.winfo_children()
         numero=0
@@ -216,9 +231,9 @@ class WindowIDE:
         self.__root.configure(background="#5e5d5b")
         self.__menubar = Menu(self.__root)
         self.__menubar.configure(background="#5e5d5b", foreground="#ffffff")
-        self.__iconButtonSave = PhotoImage(file='./Images/Save_1.png')
-        self.__iconButtonOpen = PhotoImage(file="./Images/open.png")
-        self.__iconButtonRun = PhotoImage(file="./Images/run.png")
+        self.__iconButtonSave = PhotoImage(file='src/Images/Save_1.png')
+        self.__iconButtonOpen = PhotoImage(file="src/Images/open.png")
+        self.__iconButtonRun = PhotoImage(file="src/Images/run.png")
         self.__textCode = None
         self.__setIDE()
     def __setIDE(self):
