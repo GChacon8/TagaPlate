@@ -174,9 +174,16 @@ def p_something(p):
                  | Number COMMA something
                  | Number
                  | TEXTVALUE COMMA something
+                 | TEXTVALUE
                  | empty'''
 
-    print()
+    p[0]=p[1]
+
+  
+def p_something3(p):
+    pass
+def p_something4(p):
+    pass
 def p_PrintValues_f(p):
     '''PrintValues_f : PrintValues LPARENTHESIS something RPARENTHESIS SEMMICOLOM '''
     p[0]=PrintValues(p[3])

@@ -2,5 +2,8 @@
 
 Proc @Principal(
 	MoveRight;
+	MoveLeft;
+	Hammer(S);
 	New @nuevo, (Num,2);
+	PrintValues("Hola");
 );

@@ -9,6 +9,7 @@ from process import *
 from LexicalAnalyzer import *
 ts=Tabla_Of_Simbols()
 import SintacticAnalyzer as AST
+import os
 
 #f = open("./entrada.txt", "r")
 #input = f.read()
@@ -28,10 +29,11 @@ fp.close()
 instruccionesl=AST.parse(cadena)
 print(instruccionesl)
 
-code  = "" # STRING THAT CONTAINS ALL THE FUTURE .PY FILE
+code  = "from pyfirmata import Arduino, SERVO, util\nfrom time import sleep\nport=\"COM3\"\nboard = Arduino(port)\n" # STRING THAT CONTAINS ALL THE FUTURE .PY FILE
 
 def validar_Principal(instrucciones):
     for i in instrucciones:
+        print("ESTA AQUI:",i)
         if type(i)==Main:
             return True
         else:
@@ -104,19 +106,19 @@ def procesar_AlterB(instr, ts):
 
 def procesar_MoveRight(instr, ts):
     global code
-    code += "\t board.digital[8].write(180)\n sleep(3000)\n"
+    code += "\tboard.digital[8].write(180)\n\tsleep(3000)\n"
 
 def procesar_MoveLeft(instr, ts):
     global code
-    code += "\t board.digital[8].write(-180)\n sleep(3000)\n"
+    code += "\tboard.digital[8].write(-180)\n\tsleep(3000)\n"
 
 def procesar_Hammer(instr, ts):
     global code
-    varPosicion = instr.valor.position
+    varPosicion = instr.position
     if varPosicion == 'N' or varPosicion == 'S':
-        code += "\t board.digital[10].write(40)\n sleep(6000)\n"
+        code += "\tboard.digital[10].write(40)\n \tsleep(6000)\n"
     else:
-        code += "\t board.digital[9].write(40)\n sleep(6000)\n"
+        code += "\tboard.digital[9].write(40)\n \tsleep(6000)\n"
 
 def procesar_Stop(instr, ts):
     global code
@@ -160,14 +162,14 @@ def procesar_CaseWhen(instr, ts):
 
 def procesar_PrintValues(instr, ts):
     global code
-    impresion = instr.valor.valor
-    code += "print("+impresion+")"
+    impresion = instr.valor
+    code += "\tprint("+impresion+")"
 
 def procesar_When(instr, ts):
     global code
     variable = instr.valor.variable
     valor = instr.valor.valor
-    code += "if "+variable+"=="+valor+":\n"
+    code += "if "+variable+"=="+valor+":\n \t"
     procesar_instrucciones(instr.instrucciones, ts)
 
 def procesar_Proces(instr, ts):
@@ -182,3 +184,9 @@ def procesar(Condicion,ts,instruccionesl):
 
 
 procesar(validar_Principal(instruccionesl),ts,instruccionesl)
+print(code)
+file = open("C:/Users/gabri/OneDrive/Documents/GitHub/TagaPlate/PruebaCode.py","w")
+file.write(code)
+file.close()
+
+print(instruccionesl)
