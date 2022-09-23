@@ -132,6 +132,24 @@ def returnSymbolTable(file):
         symbolTable += str(tok)+"\n"
     return symbolTable
 
+def returnLexTable(file):
+    symbolTable = []
+    global errorMessage
+    errorMessage = ""
+
+    fp = codecs.open(file,"r","utf-8")
+    theCodeString = fp.read()
+    analyzer = lex.lex()
+    analyzer.input(theCodeString)
+
+    while True:
+        tok = analyzer.token()
+        if not tok:
+            break
+        symbolTable += [tok]
+        
+    return symbolTable
+
 def returnErrorLexicalMesage():
     return errorMessage if errorMessage!="" else True
 

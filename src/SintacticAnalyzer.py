@@ -151,6 +151,7 @@ def p_Case_f(p):
     '''Case_f : Case When LPARENTHESIS condicional RPARENTHESIS Then LPARENTHESIS instrucciones RPARENTHESIS SEMMICOLOM
               | Case When LPARENTHESIS condicional RPARENTHESIS Then LPARENTHESIS instrucciones RPARENTHESIS Else LPARENTHESIS instrucciones RPARENTHESIS SEMMICOLOM'''
     print("Case_f ", p)
+    
 
 def p_opciones(p): # otra funcion recursiva para permitir varios "When ... Then"
     '''opciones : opciones When valorDato Then LPARENTHESIS instrucciones RPARENTHESIS
@@ -175,7 +176,7 @@ def p_something(p):
                  | TEXTVALUE COMMA something
                  | empty'''
 
-
+    print()
 def p_PrintValues_f(p):
     '''PrintValues_f : PrintValues LPARENTHESIS something RPARENTHESIS SEMMICOLOM '''
     p[0]=PrintValues(p[3])
@@ -199,6 +200,7 @@ def p_condicional_f(p):
                    | LessEqual_f
                    | Less_f'''
     print("condicional ", p)
+    p[0]=p[1]
 
 def p_IsTrue_f(p):
     '''IsTrue_f : IsTrue ID SEMMICOLOM'''
@@ -249,6 +251,7 @@ def p_expresionNum(p): # una expresion numerica puede ser el valor de una variab
     '''expresionNum : ID
                      | Alter_f '''
     print("expresionNum ", p[1])
+
 
 def p_tipoDatos(p):
     '''tipoDatos : Bool

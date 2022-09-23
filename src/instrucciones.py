@@ -80,6 +80,7 @@ class Case(Instrucciones):
         self.instrucciones=instrucciones
 
 class When(Instrucciones):
-    def __init__(self, valor, instrucciones=[]):
+    def __init__(self, variable, valor, instrucciones=[]):
         self.valor = valor
+        self.variable = variable
         self.instrucciones = instrucciones

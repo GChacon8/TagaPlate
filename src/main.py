@@ -41,28 +41,14 @@ def validar_Principal(instrucciones):
 
 
          
-def procesar_instrucciones(instruccionesl, ts):
+def procesar_instrucciones(instrucciones, ts):
     ## lista de instrucciones recolectadas
     
         
-    for instr in instruccionesl :
+    for instr in instrucciones :
         if isinstance(instr,Main): procesar_Principal(instr,ts)
         elif isinstance(instr, Values) : procesar_Values(instr, ts)
         elif isinstance(instr, Process) : procesar_Proces(instr, ts)
-        elif isinstance(instr, Alter) : procesar_Alter(instr, ts)
-        elif isinstance(instr, AlterB) : procesar_AlterB(instr, ts)
-        elif isinstance(instr, MoveRight) : procesar_MoveRight(instr, ts)
-        elif isinstance(instr, MoveLefth) : procesar_MoveLeft(instr, ts)
-        elif isinstance(instr, Hammer) : procesar_Hammer(instr, ts)
-        elif isinstance(instr, Stop) : procesar_Stop(instr, ts)
-        elif isinstance(instr, IsTrue) : procesar_IsTrue(instr, ts)
-        elif isinstance(instr, Repeat) : procesar_Repeat(instr, ts)
-        elif isinstance(instr, Until) : procesar_Until(instr, ts)
-        elif isinstance(instr, While) : procesar_While(instr, ts)
-        elif isinstance(instr, Case) : procesar_Case(instr, ts)
-        elif isinstance(instr, CaseWhen) : procesar_CaseWhen(instr, ts)
-        elif isinstance(instr, PrintValues) : procesar_PrintValues(instr, ts)
-        elif isinstance(instr, When) : procesar_When(instr, ts)
         else : print('Error: instrucción no válida')
        
 def procesar_Principal(instr,ts):
@@ -118,37 +104,41 @@ def procesar_AlterB(instr, ts):
 
 def procesar_MoveRight(instr, ts):
     global code
-    code += "\t board.digital[pin].write(grados)\n sleep(3000)\n"
+    code += "\t board.digital[8].write(180)\n sleep(3000)\n"
 
 def procesar_MoveLeft(instr, ts):
     global code
-    code += "\t board.digital[pin].write(-grados)\n sleep(3000)\n"
+    code += "\t board.digital[8].write(-180)\n sleep(3000)\n"
 
 def procesar_Hammer(instr, ts):
     global code
-    code += "\t board.digital[pin].write(grados)\n sleep(6000)\n"
+    varPosicion = instr.valor.position
+    if varPosicion == 'N' or varPosicion == 'S':
+        code += "\t board.digital[10].write(40)\n sleep(6000)\n"
+    else:
+        code += "\t board.digital[9].write(40)\n sleep(6000)\n"
 
 def procesar_Stop(instr, ts):
-    pass 
+    global code
+    code += "\t print(\"Para\") \n"
 
 def procesar_IsTrue(instr, ts):
     global code
-    varName = instr.id[1:]
-    if instr.valor.valor:
+    if instr.valor.id:
         code += "\t return True \n"
     else:
         code += "\t return False \n" 
 
 def procesar_Repeat(instr, ts):
     global code
-    procesar_instrucciones(instr.instrucciones, ts)
+    procesar_instrucciones(instr.valor.instrucciones, ts)
 
 def procesar_Until(instr, ts):
     global code
-    condicion = instr.condicion[1:]
-    instrucciones = instr.instrucciones
-    while not condicion:
-        procesar_instrucciones(instrucciones, ts)
+    condicion = instr.valor.condicion
+    instrucciones = instr.valor.instrucciones
+    code += "while not"+condicion+":\n"
+    procesar_instrucciones()
 
 def procesar_While(instr, ts):
    global code
@@ -175,13 +165,11 @@ def procesar_PrintValues(instr, ts):
 
 def procesar_When(instr, ts):
     global code
+    variable = instr.valor.variable
     valor = instr.valor.valor
-    if valor:
-        procesar_instrucciones(instr.instrucciones, ts)
+    code += "if "+variable+"=="+valor+":\n"
+    procesar_instrucciones(instr.instrucciones, ts)
 
-
-def resolver_expresion_logica(expresion,ts):
-    pass
 def procesar_Proces(instr, ts):
     print("move proces")
 
