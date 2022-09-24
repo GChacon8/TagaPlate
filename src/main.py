@@ -216,9 +216,29 @@ def procesar_CaseWhenElse(instr,ts):
     
 
 def procesar_PrintValues(instr, ts):
-    global code, contIdent
-    impresion = instr.valor
-    code += contIdent*"\t"+"print("+impresion+")"
+    global code
+    #list=[]
+    #print(instr.valor)
+    def concatenar(texto,valores):
+        print("Valor actual",valores)
+        if isinstance(valores,str):
+            texto += valores
+            return texto
+        elif isinstance(valores,NoneType):
+            return ""
+        elif isinstance(valores,Valor.ExpresionConcatenar):
+            if isinstance(valores.dato1,str):
+                texto += valores.dato1+","
+                return concatenar(texto,valores.dato2)
+            elif isinstance(valores.dato2,Valor.ExpresionConcatenar):
+                return concatenar(texto,valores.dato2)
+            else:
+                #print("hola",valores.dato2)
+                texto += valores.dato2
+                return texto
+
+    impresion = concatenar("",instr.valor)
+    
 
 def procesar_Case(instr, ts): # varName, value, instr
     global code, contIdent

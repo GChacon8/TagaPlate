@@ -11,4 +11,5 @@ Proc @Principal(
 		(MoveRight;)
 	Else
 		(MoveLeft;);
+	PrintValues(@nuevo);
 );

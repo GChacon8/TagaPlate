@@ -25,6 +25,19 @@ class Binar_Expression(NumberExpression):
         self.operador=operador
         self.num2 = num2
 
+class ExpresionString():
+    '''
+    '''
+class ExpresionConcatenar(ExpresionString) :
+    '''
+        Esta clase representa una Expresión de tipo cadena.
+        Recibe como parámetros las 2 expresiones a concatenar
+    '''
+
+    def __init__(self, dato1, dato2) :
+        self.dato1=dato1
+        self.dato2 = dato2
+
 
 class OperationA(Enum) :
     Plus = 1

@@ -70,4 +70,4 @@ def principal():
 		MoveRight()
 	else:
 		MoveLeft()
-principal()
+principal()principal()

@@ -181,25 +181,32 @@ def p_CaseElse(p):
 #                  | QUOTES TEXTVALUE QUOTES COMMA something
  #                | QUOTES TEXTVALUE QUOTES                          incluir esas 2 cuando ya sirva el token TEXTVALUE y QUOTES
 
-def p_something(p):
-    '''something : ID COMMA something
-                 | expresionNum COMMA something
-                 | expresionNum
-                 | Number COMMA something
-                 | Number
-                 | TEXTVALUE COMMA something
-                 | TEXTVALUE
-                 | empty'''
+def p_Cadena1(p):
+    '''Cadena : ID COMMA Cadena
+                 | Number COMMA Cadena
+                 | TEXTVALUE COMMA Cadena
+                 
+                 '''
 
-    p[0]=p[1]
+    p[0]=ExpresionConcatenar(p[1],p[3])
 
   
-def p_something3(p):
-    pass
-def p_something4(p):
-    pass
+def p_Cadena2(p):
+    
+    '''Cadena : Number
+                | TEXTVALUE
+                | ID
+                | empty
+                 '''
+    if p[1][0]=="@":
+        p[0]=p[1][1:]
+    else:
+        p[0] = p[1]
+    print("one_expresion",p[0])
+    
+
 def p_PrintValues_f(p):
-    '''PrintValues_f : PrintValues LPARENTHESIS something RPARENTHESIS SEMMICOLOM '''
+    '''PrintValues_f : PrintValues LPARENTHESIS Cadena RPARENTHESIS SEMMICOLOM '''
     p[0]=PrintValues(p[3])
 
     print("PrintValues ", p)
