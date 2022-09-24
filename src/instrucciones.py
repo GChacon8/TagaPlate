@@ -72,9 +72,9 @@ class Call(Instrucciones):
         self.id=id
 
 class CaseWhen(Instrucciones):
-    def __init__(self, condicion, instrucciones=[]):
+    def __init__(self, condicion, instrucciones1=[]):
         self.condicion = condicion
-        self.instrucciones=instrucciones
+        self.instrucciones1=instrucciones1
 
 class CaseWhenElse(Instrucciones):
     def __init__(self, condicion, instrucciones1=[], instrucciones2=[]):
@@ -83,12 +83,23 @@ class CaseWhenElse(Instrucciones):
         self.instrucciones2=instrucciones2
 
 class Case(Instrucciones):
-    def __init__(self, id, instrucciones=[]):
+    def __init__(self, id, options=[]):
         self.id = id
-        self.instrucciones=instrucciones
+        self.options=options
+
+class WhenOptions(Instrucciones):
+    def __init__(self, id, optionValue, instrucciones=[]):
+        self.id = id
+        self.optionValue = optionValue
+        self.instrucciones = instrucciones
+
+class WhenRecursivo(Instrucciones):
+    def __init__(self, instrucciones1,valor,instrucciones2):
+        self.valor = valor
+        self.instrucciones1=instrucciones1
+        self.instrucciones2=instrucciones2
 
 class When(Instrucciones):
-    def __init__(self, variable, valor, instrucciones=[]):
+    def __init__(self, valor, instrucciones=[]):
         self.valor = valor
-        self.variable = variable
         self.instrucciones = instrucciones

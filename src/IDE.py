@@ -4,7 +4,8 @@ from tkinter import *
 from tkinter import filedialog
 from LexicalAnalyzer import *
 from SintacticAnalyzer import parseM, returnErrorSintacticoMessage
-
+from main import *
+import threading
 
 class Errors:
     def __init__(self,root):
@@ -114,7 +115,7 @@ class myMenu:
 
         self.__errorMessage[0] = returnErrorLexicalMesage()
         self.__errorMessage[1] = returnErrorSintacticoMessage()
-
+        compilacion(self.__lastOpenedFile)
         #self.__errorMessage[2] = returnErrorSemanticoMessage()
         #print("Se imprime la tabla: ")
         #print(tokenTable)
@@ -137,16 +138,9 @@ class myMenu:
         myChild[9].config(state=DISABLED)
 
     def runProgram(self):
-        myChild = self.__root.winfo_children()
-        numero=0
-        print(myChild)
-        for i in myChild:
-            if isinstance(i,Text):
-                i.config(state=NORMAL)
-                i.insert(INSERT,"AQUIII"+str(numero))
-                print(numero)
-            numero+=1
-
+        t = threading.Thread(target=ejecutarArchivo)
+        t.start()
+        
     def saveFileAs(self):
         file = filedialog.asksaveasfilename(initialdir="/",
                                               title="Choose the Name File",

@@ -10,27 +10,15 @@ from LexicalAnalyzer import *
 ts=Tabla_Of_Simbols()
 import SintacticAnalyzer as AST
 import os
+import subprocess
 
 #f = open("./entrada.txt", "r")
 #input = f.read()
 
 contIdent = 1
 
-file = 'src/TestsFiles/Untitled.tgp'
-lexTable = returnLexTable(file)
 
-for i in lexTable:
-    ts.agregar(Simbolo(i.type, i.type, i.value))
-
-print("\n", ts.simbols)
-fp = codecs.open(file)
-cadena = fp.read()
-fp.close()
-
-instruccionesl=AST.parseM(cadena)
-
-
-code  = "from pyfirmata import Arduino, SERVO, util\nfrom time import sleep\nport=\"COM3\"\nboard = Arduino(port)\n" # STRING THAT CONTAINS ALL THE FUTURE .PY FILE
+code  = "import pyfirmata\nfrom time import sleep\n\ndef start():\n\tglobal pin8, pin9, pin10\n\tboard=pyfirmata.Arduino('COM3')\n\titer8 = pyfirmata.util.Iterator(board)\n\titer8.start()\n\tpin8 = board.get_pin('d:8:s')\n\tpin9 = board.get_pin('d:9:s')\n\tpin10 = board.get_pin('d:10:s')\n\tpin8.write(0)\n\tsleep(1)\n\tpin9.write(90)\n\tsleep(1)\n\tpin10.write(90)\n\tsleep(1)\n\ndef MoveLeft():\n\tsleep(1)\n\tfor i in range(0,90):\n\t\tpin8.write(i)\n\ndef MoveLeft():\n\tsleep(1)\n\tfor i in range(0,180):\n\t\tpin8.write(i)\n\ndef MoveRight():\n\tsleep(1)\n\tfor i in range(180,1,-1):\n\t\tpin8.write(i)\n\ndef Hammer(pos):\n\tif pos == \"N\":\n\t\tfor i in range(90,130):\n\t\t\tpin9.write(i)\n\t\tfor i in range(130,90,-1):\n\t\t\tpin9.write(i)\n\t\tsleep(1)\n\telif pos == \"S\":\n\t\tfor i in range(90,50,-1):\n\t\t\tpin9.write(i)\n\t\tfor i in range(50,90):\n\t\t\tpin9.write(i)\n\t\tsleep(1)\n\telif pos == \"E\":\n\t\tfor i in range(90,130):\n\t\t\tpin10.write(i)\n\t\tfor i in range(130,90,-1):\n\t\t\tpin10.write(i)\n\t\tsleep(1)\n\telif pos == \"O\":\n\t\tfor i in range(90,50,-1):\n\t\t\tpin10.write(i)\n\t\tfor i in range(50,90):\n\t\t\tpin10.write(i)\n\t\tsleep(1)\n\telse:\n\t\tprint(\"Error\")\n\n" # STRING THAT CONTAINS ALL THE FUTURE .PY FILE
 
 def validar_Principal(instrucciones):
     for i in instrucciones:
@@ -58,6 +46,7 @@ def procesar_instrucciones(instrucciones, ts):
         elif isinstance(i, CaseWhen) : procesar_CaseWhen(i, ts)
         elif isinstance(i, PrintValues) : procesar_PrintValues(i, ts)
         elif isinstance(i, When) : procesar_When(i, ts)
+        elif isinstance(i, CaseWhenElse): procesar_CaseWhenElse(i,ts)
         else : procesar_declaracion(i, ts)
 
          
@@ -86,10 +75,11 @@ def procesar_Principal(instr,ts):
         elif isinstance(i, Repeat) : procesar_Repeat(i, ts)
         elif isinstance(i, Until) : procesar_Until(i, ts)
         elif isinstance(i, While) : procesar_While(i, ts)
-        elif isinstance(i, Case) : procesar_Case(i, ts)
+        elif isinstance(i, Case) :  procesar_Case(i, ts)
         elif isinstance(i, CaseWhen) : procesar_CaseWhen(i, ts)
         elif isinstance(i, PrintValues) : procesar_PrintValues(i, ts)
         elif isinstance(i, When) : procesar_When(i, ts)
+        elif isinstance(i, CaseWhenElse): procesar_CaseWhenElse(i,ts)
         else : procesar_declaracion(i, ts)
 
 def procesar_declaracion(instr, ts):
@@ -141,7 +131,7 @@ def procesar_Hammer(instr, ts):
     global code, contIdent
     varPosicion = instr.position
     if varPosicion == 'N' or varPosicion == 'S' or varPosicion == "E" or varPosicion == "O":
-        code += contIdent*"\t"+"Hammer("+varPosicion+")\n"
+        code += contIdent*"\t"+"Hammer(\""+varPosicion+"\")\n"
 
 def procesar_Stop(instr, ts):
     global code, contIdent
@@ -192,30 +182,67 @@ def procesar_While(instr, ts):
      procesar_instrucciones(instrucciones, ts)
      contIdent -= 1
 
-def procesar_Case(instr, ts):
-    global code, contIdent
-    varName = instr.id
-    print("Instrucciones ", instr)
-    procesar_instrucciones(instr.instrucciones, ts)
-
 def procesar_CaseWhen(instr, ts):
     global code, contIdent
-    condicion = instr.condiciom
-    if valor:
-        procesar_instrucciones(instr.instrucciones1, ts)
+    condicion = instr.condicion
+    code += contIdent*"\t"+"if "
+    if isinstance(instr.condicion,IsTrue):
+        procesar_IsTrue(instr.condicion,ts)
+        code += ":\n"
     else:
-        procesar_instrucciones(instr.instrucciones2, ts)
+        contIdent +=1
+        code += instr.condicion.num1[1:]+instr.condicion.operador+instr.condicion.num2+":\n"
+        contIdent -= 1
+    contIdent += 1
+    procesar_instrucciones(instr.instrucciones1, ts)
+    contIdent -= 1
+
+def procesar_CaseWhenElse(instr,ts):
+    global code, contIdent
+    condicion = instr.condicion
+    code += contIdent*"\t"+"if "
+    if isinstance(instr.condicion,IsTrue):
+        procesar_IsTrue(instr.condicion,ts)
+        code += ":\n"
+    else:
+        code += instr.condicion+":\n"
+    contIdent += 1
+    procesar_instrucciones(instr.instrucciones1, ts)
+    contIdent -= 1
+    code += contIdent*"\t"+"else:\n"
+    contIdent +=1
+    procesar_instrucciones(instr.instrucciones2, ts)
+    contIdent +=1
+    
 
 def procesar_PrintValues(instr, ts):
     global code, contIdent
     impresion = instr.valor
     code += contIdent*"\t"+"print("+impresion+")"
 
+def procesar_Case(instr, ts): # varName, value, instr
+    global code, contIdent
+    #for i in instr.instrucciones:
+    procesar_instrucciones(instr, ts) 
+
+def procesar_WhenOptions(instr, ts):
+    global code, contIdent
+    varName = instr.id[1:]
+    value = instr.value
+    instructions = instr.instrucciones
+    if isinstance(instr,IsTrue):
+        procesar_IsTrue(instr.condicion,ts)
+
+    code += contIdent*"\t"+"if" + varName + "==" + value + ":\n"
+    contIdent += 1
+    procesar_instrucciones(instr.instrucciones, ts)
+    contIdent -=1
+
 def procesar_When(instr, ts):
     global code, contIdent
     variable = instr.variable
     valor = instr.valor
-    code += "if "+variable+"=="+valor+":\n"
+    code += contIdent*"\t"+"if "+variable+"=="+valor+":\n"
     contIdent += 1
     procesar_instrucciones(instr.instrucciones, ts)
     contIdent -= 1
@@ -244,6 +271,8 @@ def procesar_Proces(instr, ts):
         elif isinstance(i, CaseWhen) : procesar_CaseWhen(i, ts)
         elif isinstance(i, PrintValues) : procesar_PrintValues(i, ts)
         elif isinstance(i, When) : procesar_When(i, ts)
+        elif isinstance(i, WhenOptions) : procesar_WhenOptions(i, ts)
+        elif isinstance(i, CaseWhenElse): procesar_CaseWhenElse(i,ts)
         else : procesar_declaracion(i, ts)
 
 
@@ -254,11 +283,42 @@ def procesar(Condicion,ts,instruccionesl):
         print("no existe la funcion principal")
 
 
-procesar(validar_Principal(instruccionesl),ts,instruccionesl)
 
-print(code)
-file = open("src/PruebaCode.py","w")
-file.write(code)
-file.close()
+def makeSemantic(myFile):
+    file = myFile
+    lexTable = returnLexTable(file)
 
-#print(instruccionesl)
+    for i in lexTable:
+        ts.agregar(Simbolo(i.type, i.type, i.value))
+
+    print("\n", ts.simbols)
+    fp = codecs.open(file)
+    cadena = fp.read()
+    fp.close()
+
+    instruccionesl=AST.parseM(cadena)
+
+    procesar(validar_Principal(instruccionesl),ts,instruccionesl)
+
+code += "start()\n"
+
+lastOpened = ""
+def crearArchivo(file):
+    global code 
+    code += "principal()"
+    #print(code)
+    file = open("src/PruebaCode.py","w")
+    file.write(code)
+    file.close()
+
+def ejecutarArchivo(file=lastOpened):
+    os.chdir("src/")
+    subprocess.run("PruebaCode.py", shell=True)
+    os.chdir("../")
+
+def compilacion(file):
+    makeSemantic(file)
+    crearArchivo(file.split("/")[-1].split(".")[0])
+#print(os.getcwd().split("\\")[-1])
+compilacion("src/TestsFiles/Untitled.tgp")
+ejecutarArchivo()

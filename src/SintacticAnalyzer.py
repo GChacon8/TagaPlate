@@ -76,6 +76,7 @@ def p_instruccion(p): # Una instruccion puede ser cualquiera de las sig. funcion
                      | While_f
                      | Case_f
                      | Case2_f
+                     | CaseElse
                      | PrintValues_f
                      | call_f
                      | main
@@ -157,19 +158,14 @@ def p_Case0_f(p):
     print("Case_f ", p)
 
 def p_Case1_f(p):
-    '''Case_f :  Case When LPARENTHESIS condicional RPARENTHESIS Then LPARENTHESIS instrucciones RPARENTHESIS Else LPARENTHESIS instrucciones RPARENTHESIS SEMMICOLOM'''
+    '''Case_f : Case When LPARENTHESIS condicional RPARENTHESIS Then LPARENTHESIS instrucciones RPARENTHESIS Else LPARENTHESIS instrucciones RPARENTHESIS SEMMICOLOM'''
     p[0] = CaseWhenElse(p[4],p[8],p[12])
     print("Case_f ", p)
     
-
-def p_opciones(p): # otra funcion recursiva para permitir varios "When ... Then"
-    '''opciones : opciones When valorDato Then LPARENTHESIS instrucciones RPARENTHESIS
-                | When valorDato Then LPARENTHESIS instrucciones RPARENTHESIS'''
-    p[0] = When(p[])
-
+    
 def p_opciones(p):
     '''opciones : When valorDato Then LPARENTHESIS instrucciones RPARENTHESIS'''
-    p[0] = When()
+    p[0] = WhenOptions(p[2],p[5])
 
 def p_Case2_f(p):
     '''Case2_f : Case ID opciones SEMMICOLOM'''
@@ -281,7 +277,9 @@ def p_varDeclaration(p):
 
 def p_expresionNum(p): # una expresion numerica puede ser el valor de una variable o el resultado de la funcion Alter
     '''expresionNum : ID
-                     | Alter_f '''
+                    | Alter_f 
+                    | Number'''
+    p[0] = p[1]
     print("expresionNum ", p[1])
 
 
@@ -345,7 +343,6 @@ parser = yacc.yacc()
 #fp.close()
 
 def parseM(input):
-    print("hey")
     return parser.parse(input)
 
 #result =  parseM(cadena)

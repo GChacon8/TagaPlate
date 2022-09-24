@@ -19,7 +19,7 @@ class Logic(NumberExpression) :
         self.exp2 = exp2
         self.operador = operador
 
-class Binar_Expression():
+class Binar_Expression(NumberExpression):
     def __init__(self,num1,operador,num2):
         self.num1=num1
         self.operador=operador
