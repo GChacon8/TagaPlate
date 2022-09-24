@@ -1,6 +1,5 @@
 from ast import Num
 from enum import Enum
-from lib2to3.pgen2.token import GREATEREQUAL, LESSEQUAL
 
 
 class NumberExpression():
@@ -19,7 +18,8 @@ class Logic(NumberExpression) :
         self.exp1 = exp1
         self.exp2 = exp2
         self.operador = operador
-class Binar_Expression(NumberExpression):
+
+class Binar_Expression():
     def __init__(self,num1,operador,num2):
         self.num1=num1
         self.operador=operador

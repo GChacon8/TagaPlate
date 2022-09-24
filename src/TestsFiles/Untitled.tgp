@@ -4,6 +4,15 @@ Proc @Principal(
 	MoveRight;
 	MoveLeft;
 	Hammer(S);
-	New @nuevo, (Num,2);
-	PrintValues("Hola");
+	New @nuevo, (Bool, True);
+	New @justin, (Num, 1800);
+
+
+
+	Case @justin 
+		When 1 Then 
+			(Stop;)
+		When 18 Then 
+			(MoveLeft;);
+
 );

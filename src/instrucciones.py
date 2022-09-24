@@ -42,13 +42,14 @@ class AlterB(Instrucciones):
 class MoveRight(Instrucciones):
     def __init__(self):
         self.move=180
-class MoveLefth(Instrucciones):
+class MoveLeft(Instrucciones):
     def __init__(self):
         self.move=-180
         
 class Hammer(Instrucciones):
     def __init__(self,position):
         self.position=position
+
 class Stop(Instrucciones):
     pass
 
@@ -61,10 +62,11 @@ class Repeat(Instrucciones):
     def __init__(self,instrucciones=[]):
         self.instrucciones=instrucciones
 
-class Until():
+class Until(Instrucciones):
     def __init__(self,condicion,instrucciones=[]):
         self.condicion=condicion
         self.instrucciones=instrucciones
+
 class Call(Instrucciones):
     def __init__(self,id):
         self.id=id

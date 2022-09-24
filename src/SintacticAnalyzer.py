@@ -120,7 +120,7 @@ def p_MoveRight_f(p):
 
 def p_MoveLeft_f(p):
     '''MoveLeft_f : MoveLeft SEMMICOLOM'''
-    p[0]=MoveLefth()
+    p[0]=MoveLeft()
     print("MoveLeft_f", p)
 
 def p_Hammer_f(p):
@@ -142,8 +142,8 @@ def p_Repeat_f(p):
     print("Repeat_f", p)
 
 def p_Until_f(p):
-    '''Until_f : Until LPARENTHESIS instrucciones RPARENTHESIS condicional SEMMICOLOM'''
-    p[0]=Until(p[3])
+    '''Until_f : Until LPARENTHESIS instrucciones RPARENTHESIS condicional'''
+    p[0]=Until(p[5],p[3])
     print("Until_f", p)
 
 def p_While_f(p):
@@ -151,19 +151,33 @@ def p_While_f(p):
     p[0]=While(p[2],p[4])
     print("While_f", p)
 
-def p_Case_f(p):
-    '''Case_f : Case When LPARENTHESIS condicional RPARENTHESIS Then LPARENTHESIS instrucciones RPARENTHESIS SEMMICOLOM
-              | Case When LPARENTHESIS condicional RPARENTHESIS Then LPARENTHESIS instrucciones RPARENTHESIS Else LPARENTHESIS instrucciones RPARENTHESIS SEMMICOLOM'''
+def p_Case0_f(p):
+    '''Case_f : Case When LPARENTHESIS condicional RPARENTHESIS Then LPARENTHESIS instrucciones RPARENTHESIS SEMMICOLOM'''
+    p[0] = CaseWhen(p[4],p[8])
+    print("Case_f ", p)
+
+def p_Case1_f(p):
+    '''Case_f :  Case When LPARENTHESIS condicional RPARENTHESIS Then LPARENTHESIS instrucciones RPARENTHESIS Else LPARENTHESIS instrucciones RPARENTHESIS SEMMICOLOM'''
+    p[0] = CaseWhen(p[4],p[8],p[12])
     print("Case_f ", p)
     
 
 def p_opciones(p): # otra funcion recursiva para permitir varios "When ... Then"
     '''opciones : opciones When valorDato Then LPARENTHESIS instrucciones RPARENTHESIS
                 | When valorDato Then LPARENTHESIS instrucciones RPARENTHESIS'''
+    p[0] = When(p[])
+
+def p_opciones(p):
+    '''opciones : When valorDato Then LPARENTHESIS instrucciones RPARENTHESIS'''
+    p[0] = When()
 
 def p_Case2_f(p):
-    '''Case2_f : Case ID opciones SEMMICOLOM
-                | Case ID opciones Else instrucciones SEMMICOLOM '''
+    '''Case2_f : Case ID opciones SEMMICOLOM'''
+    p[0] = Case(p[2],p[3])
+
+def p_CaseElse(p):
+    '''CaseElse : Case ID opciones Else instrucciones SEMMICOLOM'''
+    #p[0] = 
 
 # something engloba a los ID de variables, valores de texto entre comillas(QUOTES) y numeros.
 # El PrintValues puede imprimir varias cosas a la vez, por eso se incluye la posiblidad de poner coma (,)"
@@ -214,39 +228,46 @@ def p_condicional_f(p):
     p[0]=p[1]
 
 def p_IsTrue_f(p):
-    '''IsTrue_f : IsTrue ID SEMMICOLOM'''
-    p[0]=IsTrue(p[2])
+    '''IsTrue_f : IsTrue LPARENTHESIS ID RPARENTHESIS SEMMICOLOM
+                | IsTrue LPARENTHESIS ID RPARENTHESIS'''
+    p[0]=IsTrue(p[3])
     print("IsTrue_f", p)
 
 def p_Greater_f(p):
-    '''Greater_f : expresionNum Greater expresionNum SEMMICOLOM'''
-    p[0]=Binar_Expression(p[1],OperationL.GREATER,p[3])
+    '''Greater_f : expresionNum Greater expresionNum SEMMICOLOM
+                 | expresionNum Greater expresionNum '''
+    p[0]=Binar_Expression(p[1],">",p[3])
 
     print("Greater_f", p)
 
 def p_GreaterEqual_f(p):
-    '''GreaterEqual_f : expresionNum GreaterEqual expresionNum SEMMICOLOM'''
-    p[0]=Binar_Expression(p[1],OperationL.GREATEREQUAL,p[3])
+    '''GreaterEqual_f : expresionNum GreaterEqual expresionNum SEMMICOLOM
+                        |  expresionNum GreaterEqual expresionNum'''
+    p[0]=Binar_Expression(p[1],">=",p[3])
     print("GreaterEqual", p)
 
 def p_Equals_f(p):
-    '''Equals_f : expresionNum Equals expresionNum SEMMICOLOM'''
-    p[0]=Binar_Expression(p[1],OperationL.EQUAL,p[3])
+    '''Equals_f : expresionNum Equals expresionNum SEMMICOLOM
+                | expresionNum Equals expresionNum '''
+    p[0]=Binar_Expression(p[1],"<=",p[3])
     print("Equals", p)
 
 def p_Different_f(p):
-    '''Different_f : expresionNum Different expresionNum SEMMICOLOM'''
-    p[0]=Binar_Expression(p[1],OperationL.DIFFERENT,p[3])
+    '''Different_f : expresionNum Different expresionNum SEMMICOLOM
+                    | expresionNum Different expresionNum '''
+    p[0]=Binar_Expression(p[1],"<>",p[3])
     print("Different_f:", p)
 
 def p_LessEqual_f(p):
-    '''LessEqual_f : expresionNum LessEqual expresionNum SEMMICOLOM'''
-    p[0]=Binar_Expression(p[1],OperationL.LESSEQUAL,p[3])
+    '''LessEqual_f : expresionNum LessEqual expresionNum SEMMICOLOM
+                    | expresionNum LessEqual expresionNum'''
+    p[0]=Binar_Expression(p[1],"<=",p[3])
     print("LessEquals", p)
 
 def p_Less_f(p):
-    '''Less_f : expresionNum Less expresionNum SEMMICOLOM'''
-    p[0]=Binar_Expression(p[1],OperationL.LESS,p[3])
+    '''Less_f : expresionNum Less expresionNum SEMMICOLOM
+              | expresionNum Less expresionNum'''
+    p[0]=Binar_Expression(p[1],"<",p[3])
     print("Less_f :", p)
 
 
@@ -282,11 +303,11 @@ def p_call_f(p):
 def p_error(p):
     global errorMsg, lastLineErr, backUp
 
-    currentLineErr = str(p.lineno)
-
     previous_token = parser.symstack[-1]
 
     if p:
+        currentLineErr = str(p.lineno)
+
         if type(previous_token) == type(p):
             print("PRIEMRA ")
 
@@ -294,17 +315,19 @@ def p_error(p):
                 errorMsg += "Error sintactico en linea " + str(previous_token.lineno) + "\n"
                 print("\nSyntax error in  " + str(previous_token) + "in line " + str(parser.symstack[-1].lineno))
                 parser.errok()
+                lastLineErr = currentLineErr
 
         else:
             print("SEGUNDA ")
             if lastLineErr != currentLineErr:
                 errorMsg += "Error sintactico en linea " + str(p.lineno) + "\n"
                 print("\nSyntax error in  " + str(p) + "in line " + str(p.lineno))
+                lastLineErr = currentLineErr
     
     else:
         print("END OF FILEEEEEEEE ")
 
-    lastLineErr = currentLineErr
+    
 
     #backUp += [str(parser.symstack[-1].lineno)]
 
@@ -315,16 +338,17 @@ def returnErrorSintacticoMessage():
 
 # PRUEBA DEL PARSER EN UN ARCHIVO ----------------------------------------------------
 #print("\n")
-file = 'src/TestsFiles/TagaPlateCode.tgp'
-fp = codecs.open(file)
-cadena = fp.read()
+#file = 'src/TestsFiles/TagaPlateCode.tgp'
+#fp = codecs.open(file)
+#cadena = fp.read()
 parser = yacc.yacc()
-fp.close()
+#fp.close()
 
-def parseM(input) :
+def parseM(input):
+    print("hey")
     return parser.parse(input)
 
-result =  parseM(cadena)
+#result =  parseM(cadena)
 
 #result.imprimir("")
 #print result

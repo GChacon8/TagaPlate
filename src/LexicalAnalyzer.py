@@ -73,7 +73,7 @@ def t_PRINCIPAL(t):
     return t
 
 def t_Number(t):
-    r'\d'
+    r'\d+'
     if t.value.upper() in reserverdWords:
         t.value = t.value.upper()
         t.type = t.value
