@@ -7,9 +7,10 @@ Proc @Principal(
 	New @nuevo, (Bool, True);
 	New @justin, (Num, 1800);
 
+	PrintValues(88,"HOLA",@nuevo);
 	Case When (IsTrue(@nuevo)) Then
 		(MoveRight;)
 	Else
 		(MoveLeft;);
-	PrintValues(@nuevo);
+	
 );

@@ -189,6 +189,7 @@ def p_Cadena1(p):
                  '''
 
     p[0]=ExpresionConcatenar(p[1],p[3])
+    print(p[0])
 
   
 def p_Cadena2(p):

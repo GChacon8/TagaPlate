@@ -2,7 +2,8 @@ from ast import operator
 import codecs
 from msilib.schema import Condition
 from operator import truediv
-from expresion import Valor
+from types import NoneType
+from expresion import ExpresionConcatenar, Valor
 from instrucciones import *
 from tabla import *
 from process import *
@@ -216,7 +217,7 @@ def procesar_CaseWhenElse(instr,ts):
     
 
 def procesar_PrintValues(instr, ts):
-    global code
+    global code, contIdent
     #list=[]
     #print(instr.valor)
     def concatenar(texto,valores):
@@ -226,11 +227,12 @@ def procesar_PrintValues(instr, ts):
             return texto
         elif isinstance(valores,NoneType):
             return ""
-        elif isinstance(valores,Valor.ExpresionConcatenar):
+        
+        elif isinstance(valores,ExpresionConcatenar):
             if isinstance(valores.dato1,str):
                 texto += valores.dato1+","
                 return concatenar(texto,valores.dato2)
-            elif isinstance(valores.dato2,Valor.ExpresionConcatenar):
+            elif isinstance(valores.dato2,ExpresionConcatenar):
                 return concatenar(texto,valores.dato2)
             else:
                 #print("hola",valores.dato2)
@@ -238,6 +240,7 @@ def procesar_PrintValues(instr, ts):
                 return texto
 
     impresion = concatenar("",instr.valor)
+    code +=contIdent*"\t"+"print("+impresion+")\n"
     
 
 def procesar_Case(instr, ts): # varName, value, instr

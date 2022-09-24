@@ -66,8 +66,9 @@ def principal():
 	Hammer("S")
 	nuevo = True
 	justin = 1800
+	print(88,"HOLA",nuevo)
 	if True:
 		MoveRight()
 	else:
 		MoveLeft()
-principal()principal()
+principal()
