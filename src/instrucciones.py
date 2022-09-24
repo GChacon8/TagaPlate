@@ -76,6 +76,12 @@ class CaseWhen(Instrucciones):
         self.condicion = condicion
         self.instrucciones=instrucciones
 
+class CaseWhenElse(Instrucciones):
+    def __init__(self, condicion, instrucciones1=[], instrucciones2=[]):
+        self.condicion = condicion
+        self.instrucciones1=instrucciones1
+        self.instrucciones2=instrucciones2
+
 class Case(Instrucciones):
     def __init__(self, id, instrucciones=[]):
         self.id = id

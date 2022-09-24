@@ -158,7 +158,7 @@ def p_Case0_f(p):
 
 def p_Case1_f(p):
     '''Case_f :  Case When LPARENTHESIS condicional RPARENTHESIS Then LPARENTHESIS instrucciones RPARENTHESIS Else LPARENTHESIS instrucciones RPARENTHESIS SEMMICOLOM'''
-    p[0] = CaseWhen(p[4],p[8],p[12])
+    p[0] = CaseWhenElse(p[4],p[8],p[12])
     print("Case_f ", p)
     
 

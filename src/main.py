@@ -200,7 +200,7 @@ def procesar_Case(instr, ts):
 
 def procesar_CaseWhen(instr, ts):
     global code, contIdent
-    valor = instr.valor.valor
+    condicion = instr.condiciom
     if valor:
         procesar_instrucciones(instr.instrucciones1, ts)
     else:
